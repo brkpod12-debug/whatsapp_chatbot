@@ -5,6 +5,7 @@ import type { Stat, HomePage } from "@/sanity/queries";
 import { CountUp } from "@/components/motion/CountUp";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Reveal } from "@/components/motion/Reveal";
+import { IstClock } from "@/components/ui/IstClock";
 import { cn } from "@/lib/utils";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -16,7 +17,7 @@ export function Stats({ stats, copy }: { stats: Stat[]; copy: HomePage["stats"] 
     <section className="bg-graphite">
       <div className="mx-auto max-w-[1440px] px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
         <Reveal>
-          <div className="border border-paper/15 bg-graphite">
+          <div className="perforated-edge border border-paper/15 bg-graphite text-paper/70 outline outline-1 outline-paper/10 outline-offset-[3px]">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-paper/15 px-6 py-5 sm:px-10">
               <p className="stamp text-paper/60">{copy.label}</p>
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald/90">
@@ -45,9 +46,12 @@ export function Stats({ stats, copy }: { stats: Stat[]; copy: HomePage["stats"] 
                       className="absolute bottom-0 left-0 hidden h-full w-px origin-top bg-brass/45 lg:block"
                     />
 
+                    {/* Folio numeral, set as a register mark rather than a label.
+                        Upright, not italic: Instrument Serif's italic capital I is a
+                        bare stem, so "III"/"IV" read as slashes at this size. */}
                     <FadeIn
                       delay={0.1 + i * 0.08}
-                      className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/40"
+                      className="font-display text-[32px] font-light leading-none tracking-[0.08em] text-brass/80"
                     >
                       {stat.numeral}
                     </FadeIn>
@@ -67,7 +71,7 @@ export function Stats({ stats, copy }: { stats: Stat[]; copy: HomePage["stats"] 
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-paper/15 px-6 py-4 sm:px-10">
               <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/35">
-                As of {new Date().getFullYear()} · {copy.footerNote}
+                As of <IstClock /> · {copy.footerNote}
               </span>
               <span aria-hidden className="hidden font-mono text-[10px] uppercase tracking-[0.24em] text-paper/35 sm:inline">
                 {copy.eoe}

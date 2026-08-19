@@ -24,6 +24,12 @@
   --color-clay: #b9b2a3;
   --color-line: #e5ddd0;
   --color-paper-dark: #efeae1;
+
+  /* Brass Desk additions. `emerald` stays the brass accent (see AGENTS.md);
+     these extend the register rather than redefining it. */
+  --color-aurum: #e3c98a;
+  --color-ash: #847d6f;
+  --color-wax: #8a2a1f;
 }
 
 :root {
@@ -36,6 +42,13 @@
   --clay: #b9b2a3;
   --line: #e5ddd0;
   --paper-dark: #efeae1;
+
+  --aurum: #e3c98a;
+  --ash: #847d6f;
+  --gold-glow: rgba(193, 163, 109, 0.16);
+  --ink-veil: rgba(7, 7, 6, 0.55);
+  /* Precious resource: at most two uses per page (see AGENTS.md copy discipline). */
+  --wax-red: #8a2a1f;
 
   --font-display: var(--font-display);
   --font-sans: var(--font-body);
@@ -138,6 +151,67 @@ select {
 
   .brass-shimmer:hover::after {
     transform: translateX(100%);
+  }
+
+  .text-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Surveyor's Tape plot image. Only the pinned desktop track starts
+     desaturated, because only there does scroll scrub the colour back in.
+     On touch, and under reduced motion, the plots are simply in colour so no
+     one is left looking at a permanently grey photograph. */
+  .tape-img {
+    filter: none;
+  }
+
+  @media (min-width: 769px) {
+    .tape-img {
+      filter: grayscale(1) brightness(0.9);
+    }
+  }
+
+  @media (min-width: 769px) and (prefers-reduced-motion: reduce) {
+    .tape-img {
+      filter: none;
+    }
+  }
+
+  /* Ledger perforation: faint punched dots down the left edge of a register card. */
+  .perforated-edge {
+    position: relative;
+  }
+
+  .perforated-edge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 7px;
+    width: 2px;
+    pointer-events: none;
+    background-image: radial-gradient(circle, currentColor 0 1px, transparent 1px);
+    background-size: 2px 24px;
+    background-repeat: repeat-y;
+    opacity: 0.25;
+  }
+
+  /* Sibling-dim for the Collection grid. Scoped to hover-capable pointers so a
+     tap on touch never leaves the other folios stuck at reduced opacity. */
+  .folio-desk a[data-cursor="VIEW"] {
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .folio-desk:hover a[data-cursor="VIEW"]:not(:hover) {
+      opacity: 0.6;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .folio-desk a[data-cursor="VIEW"] {
+      transition: none;
+    }
   }
 
   .text-balance {

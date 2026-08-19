@@ -9,6 +9,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { PremiumCursor } from "@/components/motion/PremiumCursor";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { SealLoader } from "@/components/motion/SealLoader";
 import "../globals.css";
 
 export const viewport: Viewport = {
@@ -76,6 +77,7 @@ export default async function RootLayout({
         >
           Skip to content
         </a>
+        <SealLoader />
         <SmoothScroll />
         <ScrollProgress />
         <PremiumCursor />

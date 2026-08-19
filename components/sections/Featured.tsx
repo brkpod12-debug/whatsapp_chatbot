@@ -2,6 +2,7 @@
 import { ChapterMarker } from "@/components/ui/ChapterMarker";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
+import { RegistryRule } from "@/components/motion/RegistryRule";
 import { PropertyCard } from "@/components/PropertyCard";
 
 export function Featured({ properties, copy }: { properties: Property[]; copy: HomePage["featured"] }) {
@@ -24,7 +25,9 @@ export function Featured({ properties, copy }: { properties: Property[]; copy: H
           </p>
         </Reveal>
 
-        <div className="mt-20 grid grid-cols-1 gap-8 lg:grid-cols-12">
+        {/* Sibling-dim: hovering one folio recedes the others, so the desk only
+            ever has one document under the lamp. See .folio-desk in globals.css. */}
+        <div className="folio-desk mt-20 grid grid-cols-1 gap-8 lg:grid-cols-12">
           {first && (
             <Reveal className="lg:col-span-7">
               <PropertyCard property={first} large />
@@ -44,8 +47,9 @@ export function Featured({ properties, copy }: { properties: Property[]; copy: H
           </div>
         </div>
 
+        <RegistryRule className="mt-20" />
         <Reveal delay={0.1}>
-          <div className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-ink/15 pt-10">
+          <div className="flex flex-wrap items-center gap-x-10 gap-y-4 pt-10">
             {[
               { label: "All villas", href: "/villas" },
               { label: "All apartments", href: "/apartments" },

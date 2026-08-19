@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
@@ -35,13 +36,43 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
     : `https://picsum.photos/seed/${property.slug}/${dim}/${dim}`;
   const reduce = useReducedMotion();
 
+  // Brass spotlight follows the pointer inside the frame. Written straight to
+  // CSS custom properties on the element and rAF-coalesced, so a pointermove
+  // storm never triggers a React render or a layout read per frame.
+  const frame = useRef<HTMLDivElement>(null);
+  const raf = useRef(0);
+
+  const onPointerMove = useCallback(
+    (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (reduce || e.pointerType !== "mouse") return;
+      const el = frame.current;
+      if (!el) return;
+      const { clientX, clientY } = e;
+      if (raf.current) return;
+      raf.current = requestAnimationFrame(() => {
+        raf.current = 0;
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${clientX - r.left}px`);
+        el.style.setProperty("--my", `${clientY - r.top}px`);
+      });
+    },
+    [reduce]
+  );
+
   return (
     <Link
       href={`/properties/${property.slug}`}
       data-cursor="VIEW"
-      className={cn("group block", className)}
+      className={cn(
+        "group block transition-transform duration-300 ease-out active:scale-[0.985]",
+        className
+      )}
     >
-      <div className="relative overflow-hidden rounded-[2px] bg-carbon">
+      <div
+        ref={frame}
+        onPointerMove={onPointerMove}
+        className="relative overflow-hidden rounded-[2px] bg-carbon shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-shadow duration-500 ease-out group-hover:shadow-[0_1px_0_rgba(0,0,0,0.04),0_30px_60px_-20px_rgba(0,0,0,0.25)]"
+      >
         <div className={cn("relative", ratio)}>
           <CurtainReveal className="absolute inset-0">
             <Image
@@ -56,6 +87,18 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
 
         {property.category === "apartment" && (
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_110%,rgba(10,10,9,0.95)_0%,rgba(10,10,9,0.35)_45%,transparent_70%)] opacity-0 transition-opacity duration-1000 ease-out group-hover:opacity-100" />
+        )}
+
+        {/* Pointer-tracked brass spotlight, above the image but under the type */}
+        {!reduce && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
+            style={{
+              background:
+                "radial-gradient(200px 200px at var(--mx, 50%) var(--my, 50%), var(--gold-glow), transparent 70%)",
+            }}
+          />
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-carbon/80 via-transparent to-transparent" />

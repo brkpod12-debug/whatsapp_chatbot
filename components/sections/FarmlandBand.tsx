@@ -1,17 +1,14 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { ChapterMarker } from "@/components/ui/ChapterMarker";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
-import { Parallax } from "@/components/motion/Parallax";
-import { SlowZoom } from "@/components/motion/SlowZoom";
+import { SurveyorTape } from "@/components/SurveyorTape";
 import type { HomePage } from "@/sanity/queries";
-import { urlFor } from "@/sanity/image";
 
 export function FarmlandBand({ copy }: { copy: HomePage["farmlandBand"] }) {
   return (
-    <section className="overflow-hidden bg-carbon">
-      <div className="mx-auto max-w-[1440px] px-6 py-28 sm:px-12 lg:px-20 lg:py-36">
+    <section className="bg-carbon">
+      <div className="mx-auto max-w-[1440px] px-6 pb-10 pt-28 sm:px-12 lg:px-20 lg:pt-36">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <div>
             <Reveal>
@@ -38,37 +35,12 @@ export function FarmlandBand({ copy }: { copy: HomePage["farmlandBand"] }) {
             </a>
           </Reveal>
         </div>
+      </div>
 
-        <Reveal delay={0.15}>
-          <div className="mt-16 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {copy.grounds.map((g) => (
-              <article
-                key={g.name}
-                className="group w-[300px] shrink-0 snap-start border-t border-paper/20 lg:w-[360px]"
-              >
-                <a href="/farmlands" className="block" data-cursor="VIEW">
-                  <div className="vignette relative aspect-[4/5] overflow-hidden rounded-[2px]">
-                    <Parallax strength={5} className="absolute inset-[-14%]">
-                      <SlowZoom>
-                        <Image
-                          src={g.image ? urlFor(g.image).width(720).height(900).url() : `https://picsum.photos/seed/josh-farm-${g.name}/720/900`}
-                          alt={`${g.name}, ${g.note}`}
-                          fill
-                          sizes="(max-width: 640px) 300px, 360px"
-                          className="object-cover grayscale transition-[filter,transform] duration-[1200ms] ease-out group-hover:scale-[1.06] group-hover:grayscale-0"
-                        />
-                      </SlowZoom>
-                    </Parallax>
-                  </div>
-                  <h3 className="mt-5 font-display text-2xl font-light text-paper">
-                    {g.name}
-                  </h3>
-                  <p className="mt-1 text-[13px] text-paper/50">{g.note}</p>
-                </a>
-              </article>
-            ))}
-          </div>
-        </Reveal>
+      {/* The tape runs full-bleed: it is pinned and dragged horizontally on
+          desktop, so it must not sit inside the page's max-width gutter. */}
+      <div className="px-6 pb-28 sm:px-12 md:px-0 md:pb-0 lg:px-0">
+        <SurveyorTape grounds={copy.grounds} />
       </div>
     </section>
   );
