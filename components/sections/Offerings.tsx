@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { Service, HomePage } from "@/sanity/queries";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
+import { CounterRotate } from "@/components/motion/CounterRotate";
 
 const hoverClass: Record<string, string> = {
   "/villas":
@@ -51,12 +52,19 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
                 data-cursor="VIEW"
                 className="group grid grid-cols-1 gap-8 border-b border-ink/15 py-10 transition-opacity duration-500 md:grid-cols-[auto_1fr_240px] md:items-center md:gap-10 lg:py-12"
               >
-                <span className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald">
+                <CounterRotate
+                  direction={i % 2 === 0 ? 1 : -1}
+                  className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald"
+                >
                   {s.numeral}
-                </span>
+                </CounterRotate>
                 <div>
-                  <h3 className="font-display text-3xl font-light text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
+                  <h3 className="relative inline-block font-display text-3xl font-light text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
                     {s.name}
+                    <span
+                      aria-hidden
+                      className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-emerald transition-transform duration-[320ms] ease-out group-hover:scale-x-100 motion-reduce:transition-none"
+                    />
                   </h3>
                   <p className="mt-3 max-w-[60ch] text-pretty text-[15px] leading-relaxed text-ink/60">
                     {s.detail}
@@ -81,12 +89,15 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
               <Link
                 href={advisory.href}
                 data-cursor="ENQUIRE"
-                className="group flex items-center justify-between gap-6 py-10 transition-opacity duration-500 lg:py-12"
+                className="wax-border group flex items-center justify-between gap-6 px-6 py-10 transition-opacity duration-500 lg:py-12"
               >
                 <div>
-                  <span className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald">
+                  <CounterRotate
+                    direction={-1}
+                    className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald"
+                  >
                     {advisory.numeral}
-                  </span>
+                  </CounterRotate>
                   <h3 className="mt-3 font-display text-3xl font-light text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
                     {advisory.name}
                   </h3>

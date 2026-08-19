@@ -346,6 +346,55 @@ select {
   animation: scrollLine 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+/* Sealing wax: a brass conic sweep travelling the border of the advisory row.
+   Painted into the border box only, via a mask, so the row stays sharp-edged
+   and the fill underneath is untouched. */
+.wax-border {
+  position: relative;
+}
+
+.wax-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--wax-angle, 0deg),
+    transparent 0deg,
+    var(--color-brass) 40deg,
+    transparent 110deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: waxTurn 8s linear infinite;
+}
+
+@property --wax-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes waxTurn {
+  to {
+    --wax-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wax-border::before {
+    animation: none;
+  }
+}
+
 /* Folio seal: one slow revolution, used as a resting watermark on the story card. */
 @keyframes sealTurn {
   from {
