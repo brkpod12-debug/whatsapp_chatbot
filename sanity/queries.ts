@@ -200,11 +200,11 @@ export async function getPartnerLogos(): Promise<PartnerLogo[]> {
   );
 }
 
-export type PromiseItem = { title: string; body: string };
+export type PromiseItem = { title: string; body: string; insight?: string | null };
 
 export async function getPromiseItems(): Promise<PromiseItem[]> {
   return client.fetch(
-    `*[_type == "promiseItem"] | order(order asc) {title, body}`,
+    `*[_type == "promiseItem"] | order(order asc) {title, body, insight}`,
     {},
     { next: { tags: ["promiseItem"] } }
   );

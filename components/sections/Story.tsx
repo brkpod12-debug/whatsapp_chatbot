@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
 import { Parallax } from "@/components/motion/Parallax";
+import { FolioWipe } from "@/components/motion/FolioWipe";
+import { StampSeal } from "@/components/motion/StampSeal";
 import { Seal } from "@/components/ui/Seal";
 import type { HomePage } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
@@ -28,8 +30,8 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
         </Reveal>
 
         <div className="order-2">
-          <Reveal>
-            <div className="border border-ink/15 bg-paper outline outline-1 outline-ink/10 outline-offset-[3px]">
+          <FolioWipe>
+            <div className="relative border border-ink/15 bg-paper outline outline-1 outline-ink/10 outline-offset-[3px]">
               <div className="flex items-center justify-between gap-6 border-b border-ink/15 px-7 py-5 sm:px-10">
                 <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slate">
                   {copy.folioLabel}
@@ -40,7 +42,8 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
               </div>
 
               <div className="relative px-7 py-10 sm:px-10">
-                <Seal className="pointer-events-none absolute -right-5 -top-5 h-44 w-44 text-emerald/[0.07]" />
+                {/* Resting watermark: one revolution a minute, never a focal point */}
+                <Seal className="animate-seal-turn pointer-events-none absolute -right-5 -top-5 h-44 w-44 text-emerald/[0.07]" />
                 <RevealMask>
                   <h2 className="font-display text-4xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-5xl">
                     {copy.headingPlain}
@@ -73,12 +76,13 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
                         {copy.signoffTitle}
                       </p>
                     </div>
-                    <Seal className="h-14 w-14 shrink-0 text-emerald" />
+                    {/* The sign-off seal presses once, as a notary would */}
+                    <StampSeal className="h-14 w-14 shrink-0 text-emerald" />
                   </div>
                 </Reveal>
               </div>
             </div>
-          </Reveal>
+          </FolioWipe>
         </div>
       </div>
     </section>

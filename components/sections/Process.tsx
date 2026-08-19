@@ -7,6 +7,8 @@ import { useReducedMotion } from "motion/react";
 import type { ProcessStep, HomePage } from "@/sanity/queries";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
+import { IstClock } from "@/components/ui/IstClock";
+import { WaxSeal } from "@/components/ui/WaxSeal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,6 +106,9 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
                   {copy.intro}
                 </p>
               </Reveal>
+              <p className="stamp mt-8 text-paper/35">
+                Doc · <IstClock precision="second" />
+              </p>
             </div>
           </div>
 
@@ -140,6 +145,16 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
                 </Reveal>
               ))}
             </ol>
+
+            {/* The method closes the way a file does: stamped, then set down. */}
+            <div className="mt-20 flex items-center gap-6 border-t border-paper/15 pt-10">
+              <WaxSeal label="Advisory · Delivered" className="h-20 w-20 shrink-0" />
+              <p className="stamp text-paper/45">
+                Advisory
+                <br />
+                delivered
+              </p>
+            </div>
           </div>
         </div>
       </div>
