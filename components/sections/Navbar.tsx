@@ -44,17 +44,33 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="group flex items-center"
-          aria-label="Josh Properties, home"
+          className="group flex items-center gap-3 sm:gap-3.5"
+          aria-label={`${settings.name}, home`}
         >
           <Image
-            src="/logo.png"
-            alt="Josh Properties"
-            width={160}
-            height={107}
+            src="/logo-mark.png"
+            alt=""
+            width={360}
+            height={349}
             priority
-            className="h-9 w-auto transition-opacity duration-300 sm:h-10"
+            className="h-8 w-auto transition-transform duration-500 group-hover:scale-[1.04] sm:h-9"
           />
+          <span className="flex flex-col leading-none">
+            <span
+              className={`font-display text-[16px] tracking-[0.16em] transition-colors duration-300 sm:text-[18px] ${
+                solid ? "text-ink" : "text-paper"
+              }`}
+            >
+              {settings.name.toUpperCase()}
+            </span>
+            <span
+              className={`mt-[6px] font-mono text-[8px] uppercase tracking-[0.3em] transition-colors duration-300 sm:text-[9px] ${
+                solid ? "text-champagne" : "text-emerald/80"
+              }`}
+            >
+              {settings.city}
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">

@@ -168,7 +168,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 flex items-center px-6 sm:px-12 lg:px-20"
         >
-          <div className="max-w-[600px]">
+          <div className="max-w-[760px]">
             <motion.div style={{ opacity: advisoryExit }}>
               <motion.div
                 style={{ scaleX: ruleScale }}
@@ -183,7 +183,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
             </motion.div>
             <motion.div
               style={{ opacity: hyderabadOpacity, y: hyderabadExitY }}
-              className="mt-2 overflow-hidden pb-[0.1em] pt-[0.05em]"
+              className="mt-2 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
             >
               <motion.h1
                 style={{ y: hyderabadY }}

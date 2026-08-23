@@ -48,12 +48,18 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         <div className="grid grid-cols-1 gap-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Image
-              src="/logo.png"
-              alt="Josh Properties"
-              width={180}
-              height={120}
-              className="h-10 w-auto"
+              src="/logo-mark.png"
+              alt=""
+              width={360}
+              height={349}
+              className="h-14 w-auto"
             />
+            <p className="mt-5 font-display text-[22px] tracking-[0.16em] text-paper">
+              {settings.name.toUpperCase()}
+            </p>
+            <p className="mt-3 font-display text-[17px] italic leading-snug text-emerald/85">
+              {settings.tagline}
+            </p>
             <p className="mt-6 max-w-[34ch] text-pretty text-[15px] leading-relaxed text-paper/50">
               {settings.footerBlurb}
             </p>
