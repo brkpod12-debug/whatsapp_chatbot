@@ -39,6 +39,9 @@ export function buildMetadata(
     keywords: settings.keywords || [],
 alternates: { canonical: clear?.alternates?.canonical ?? (path || "/") },
     robots: clear?.robots ?? { index: true, follow: true },
+    verification: settings.googleSiteVerification
+      ? { google: settings.googleSiteVerification }
+      : undefined,
     ...clear,
     openGraph: resolvedOg,
   };

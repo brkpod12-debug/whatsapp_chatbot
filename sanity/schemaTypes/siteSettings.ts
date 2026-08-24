@@ -118,6 +118,14 @@ export default defineType({
       description: "Shown under the site title in Google results. Aim for 150-160 characters.",
     }),
     defineField({ name: "keywords", title: "Search keywords", group: "seo", type: "array", of: [{ type: "string" }] }),
+    defineField({
+      name: "googleSiteVerification",
+      title: "Google Search Console verification code",
+      group: "seo",
+      type: "string",
+      description:
+        "Search Console > Add property > HTML tag. Paste only the content value, not the whole tag.",
+    }),
     defineField({ name: "ogTitle", title: "Social sharing title", group: "seo", type: "string" }),
     defineField({ name: "ogDescription", title: "Social sharing description", group: "seo", type: "text", rows: 2 }),
     defineField({ name: "ogImage", title: "Social sharing image", group: "seo", type: "image" }),

@@ -235,6 +235,7 @@ export type SiteSettings = {
   siteUrl: string;
   metaDescription?: string;
   keywords?: string[];
+  googleSiteVerification?: string;
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: SanityImage;
