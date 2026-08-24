@@ -36,13 +36,22 @@ export function PropertyListing({
           </Reveal>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((p, i) => (
-            <Reveal key={p.slug} delay={(i % 3) * 0.08}>
-              <PropertyCard property={p} />
-            </Reveal>
-          ))}
-        </div>
+        {items.length === 0 ? (
+          <Reveal>
+            <p className="mt-20 max-w-[42ch] border-t border-line pt-8 text-[15px] leading-relaxed text-ink/55">
+              No entries under this head just now. The register moves quickly, so
+              ask the desk what is due to be listed.
+            </p>
+          </Reveal>
+        ) : (
+          <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {items.map((p, i) => (
+              <Reveal key={p.slug} delay={(i % 3) * 0.08}>
+                <PropertyCard property={p} />
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

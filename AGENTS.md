@@ -8,6 +8,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 Marketing site for **Josh Properties**, a luxury real-estate house in Hyderabad, Telangana — villas, apartments and farmland. Curated listings, an interactive farmland masterplan, and a dossier-gated concierge contact flow. No backend.
 
+The live register currently holds apartments only, at Pragathi Nagar and Nizampet, so `/villas` and `/farmlands` render `PropertyListing`'s empty state until stock is added in Studio.
+
 ## Stack
 
 - **Next.js 16.2.12** (App Router), React 19, TypeScript (strict)
@@ -30,7 +32,7 @@ Marketing site for **Josh Properties**, a luxury real-estate house in Hyderabad,
   - `app/(site)/page.tsx` — landing page; sections in a fixed order (CinematicHero → TrustStrip → Stats → Featured → Offerings → Story → FarmlandBand → WhyJosh → Process → Testimonials → Faq → FinalCta)
   - `app/(site)/layout.tsx` — metadata, JSON-LD (`RealEstateAgent`), Navbar, Footer, FloatingCta, SmoothScroll, ScrollProgress, PageTransition, film-grain overlay
   - `app/(site)/villas/`, `app/(site)/apartments/`, `app/(site)/farmlands/` — category listing pages
-  - `app/(site)/properties/[slug]/` — detail page for a single property (`generateStaticParams`, async `params: Promise<{ slug }>`); all 9 properties prerender at build
+  - `app/(site)/properties/[slug]/` — detail page for a single property (`generateStaticParams`, async `params: Promise<{ slug }>`); every published property prerenders at build
   - `app/(site)/contact/` — concierge page + `ContactForm.tsx`
 - `app/(studio)/` — route group holding `/studio`, isolated from the site: its own minimal `layout.tsx` (bare `<html><body>`, no Lenis/cursor/transition/navbar/footer/floating-cta, noindex) so Sanity Studio's own scroll panes and fixed toolbar don't fight the site's chrome.
   - `app/(studio)/studio/[[...tool]]/` — `page.tsx` (`dynamic = "force-static"`) + `StudioClient.tsx` (mounts `NextStudio`)
