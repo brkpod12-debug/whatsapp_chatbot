@@ -20,6 +20,8 @@ import type { HomePage } from "@/sanity/queries";
 // expects an easing function (or array of them), unlike animation transitions
 // which accept a cubic-bezier tuple directly.
 const EASE_FN = cubicBezier(0.16, 1, 0.3, 1);
+// Same curve as a keyframe tuple, for mount transitions.
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Lerp factor per 60fps frame (spec: 0.08–0.15). Applied frame-rate
 // independently in the rAF loop so the film eases toward the target
@@ -100,10 +102,9 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
 
   // ─────────────────────────── Scene choreography ───────────────────────────
   // Scene 01 (0–22%): PRIVATE REAL ESTATE ADVISORY / HYDERABAD — opening title.
-  const ruleScale = useTransform(smooth, [0, 0.06], [0, 1]);
-  const advisory = useTransform(smooth, [0.03, 0.1], [0, 1]);
-  const advisoryY = useTransform(smooth, [0.03, 0.1], [8, 0]);
-  const hyderabadY = useTransform(smooth, [0.06, 0.15], ["105%", "0%"], { ease: EASE_FN });
+  // Scene 01 draws itself in on load. It used to be scroll-mapped from 0, which
+  // left the opening frame with no rule, no kicker and the headline parked
+  // outside its own clip box until roughly 400px of scroll.
   // Scene 01 exit: HYDERABAD lifts 18px and fades; advisory follows later.
   const hyderabadExitY = useTransform(smooth, [0.18, 0.27], [0, -18]);
   const hyderabadOpacity = useTransform(smooth, [0.18, 0.27], [1, 0]);
@@ -171,11 +172,15 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           <div className="max-w-[760px]">
             <motion.div style={{ opacity: advisoryExit }}>
               <motion.div
-                style={{ scaleX: ruleScale }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
                 className="h-px w-[42px] origin-left bg-emerald"
               />
               <motion.p
-                style={{ opacity: advisory, y: advisoryY }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
                 className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]"
               >
                 {copy.kicker}
@@ -186,7 +191,9 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
               className="mt-2 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
             >
               <motion.h1
-                style={{ y: hyderabadY }}
+                initial={{ y: "105%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 0.95, delay: 0.5, ease: EASE }}
                 className="font-display text-[clamp(2.8rem,9vw,7.5rem)] font-light leading-[1] text-paper"
               >
                 {copy.place}

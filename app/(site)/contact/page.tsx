@@ -91,8 +91,14 @@ export default async function ContactPage() {
                     <p className="text-[15px] leading-relaxed text-ink/70">{settings.address}</p>
                     <p className="mt-1 text-sm text-ink/50">{page.officeNote}</p>
                   </address>
-                  <div className="vignette relative mt-8 aspect-[4/3] overflow-hidden rounded-[2px]">
-                    <div className="absolute inset-0 bg-mist" />
+                  <div className="vignette relative mt-8 aspect-[4/3] overflow-hidden rounded-[2px] bg-mist">
+                    <iframe
+                      title={`${settings.name}, ${settings.address}`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&z=15&output=embed`}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="absolute inset-0 h-full w-full border-0 grayscale-[0.35]"
+                    />
                   </div>
                 </div>
               </Reveal>
