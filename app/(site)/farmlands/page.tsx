@@ -40,7 +40,8 @@ export default async function FarmlandsPage() {
 
   return (
     <>
-      <PageHero eyebrow={page.heroEyebrow} title={<>{page.heroTitleLine1}<br />{page.heroTitleLine2}</>} seed="josh-farmlands">
+      <PageHero eyebrow={page.heroEyebrow} title={<>{page.heroTitleLine1}<br />{page.heroTitleLine2}</>} seed="josh-farmlands"
+        image={page.heroImage ? urlFor(page.heroImage).width(2400).height(1200).url() : undefined}>
         <p>{page.heroBody}</p>
       </PageHero>
 

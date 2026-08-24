@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/sections/PageHero";
 import { PropertyListing } from "@/components/PropertyListing";
 import { getCategoryPage, getPropertiesByCategory, getSiteSettings } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 import { buildMetadata } from "@/lib/metadata";
 
 export const revalidate = 60;
@@ -36,6 +37,7 @@ export default async function VillasPage() {
           </>
         }
         seed="josh-villas"
+        image={page.heroImage ? urlFor(page.heroImage).width(2400).height(1200).url() : undefined}
       >
         <p>{page.heroBody}</p>
       </PageHero>

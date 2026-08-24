@@ -39,6 +39,7 @@ export default async function ApartmentsPage() {
           </>
         }
         seed="josh-apartments"
+        image={page.heroImage ? urlFor(page.heroImage).width(2400).height(1200).url() : undefined}
       >
         <p>{page.heroBody}</p>
       </PageHero>

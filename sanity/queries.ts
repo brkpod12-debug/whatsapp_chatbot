@@ -280,6 +280,7 @@ export async function getHomePage(): Promise<HomePage | null> {
 export type CategoryPage = {
   category: "villa" | "apartment" | "farmland";
   heroEyebrow: string; heroTitleLine1: string; heroTitleLine2: string; heroBody: string;
+  heroImage?: SanityImage;
   listingKicker: string; listingHeading: string; listingIntro: string;
   outlookHeading?: string; outlookBody1?: string; outlookBody2?: string;
   outlookKicker?: string; outlookNote?: string; outlookImage?: SanityImage;

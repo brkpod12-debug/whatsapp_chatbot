@@ -16,6 +16,7 @@ export default defineType({
     defineField({ name: "heroTitleLine1", type: "string", validation: (r) => r.required() }),
     defineField({ name: "heroTitleLine2", type: "string", validation: (r) => r.required() }),
     defineField({ name: "heroBody", type: "text", rows: 2, validation: (r) => r.required() }),
+    defineField({ name: "heroImage", title: "Hero photo", type: "image", options: { hotspot: true }, description: "The full-width photo behind the page title." }),
     defineField({ name: "listingKicker", type: "string", validation: (r) => r.required() }),
     defineField({ name: "listingHeading", type: "string", validation: (r) => r.required() }),
     defineField({ name: "listingIntro", type: "text", rows: 2, validation: (r) => r.required() }),

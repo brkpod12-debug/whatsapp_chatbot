@@ -24,6 +24,8 @@ const seeds: Record<string, string> = {
 // Real film stills where we have them; everything else falls back to the seed.
 const localImages: Record<string, string> = {
   "/villas": "/images/villa-01.jpg",
+  "/apartments": "/images/offering-apartments.jpg",
+  "/farmlands": "/images/offering-farmlands.jpg",
 };
 
 export function Offerings({ services, copy }: { services: Service[]; copy: HomePage["offerings"] }) {

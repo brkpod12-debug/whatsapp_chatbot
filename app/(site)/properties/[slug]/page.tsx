@@ -315,7 +315,7 @@ export default async function PropertyPage({ params }: PageProps) {
       {inGround.length > 0 && (
         <section className="bg-paper">
           <div className="mx-auto max-w-[1440px] px-6 py-16 sm:px-12 lg:px-20 lg:py-24">
-            <div className="flex items-end justify-between gap-8">
+            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
               <div>
                 <Reveal>
                   <ChapterMarker kicker={copy.groundHeading} />

@@ -76,7 +76,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={`mailto:${settings.email}`}
-                      className="font-display text-2xl font-light text-ink transition-colors hover:text-emerald"
+                      className="font-display text-xl font-light text-ink transition-colors [overflow-wrap:anywhere] hover:text-emerald sm:text-2xl"
                     >
                       {settings.email}
                     </a>

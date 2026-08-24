@@ -101,7 +101,7 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
           />
         )}
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-carbon/80 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-carbon/95 via-carbon/35 via-50% to-transparent" />
 
         <motion.div
           initial={reduce ? false : { opacity: 0, y: -8 }}

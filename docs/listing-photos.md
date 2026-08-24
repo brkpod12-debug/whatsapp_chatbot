@@ -37,3 +37,38 @@ attribution required. Credits are recorded anyway.
 Found via the Openverse API, filtered to `license=cc0,pdm`.
 
 Folio 020 (The Pragathi Nagar) keeps its own photograph and was left alone.
+
+## Site imagery
+
+The same story applies to the pictures around the site. Every slot below used
+to fall through to a random picsum image, which is how a lioness ended up
+captioned "Pragathi Nagar / Apartment" and the Swiss Alps ended up on a Wyra
+farmland card. All CC0 / public domain, cleared for commercial use.
+
+The villa page hero uses `public/images/villa-02.jpg`, which is Josh
+Properties' own film still, not stock.
+
+| Where | Slot | Image | Source | Licence | Credit | Link |
+| --- | --- | --- | --- | --- | --- | --- |
+| Home · farmland tape | Pragathi Nagar / Apartment | NSK Platina Gated Maqta Mahboobpet Miyapur hyd | wikimedia | CC0 | Curvasingh | [source](https://commons.wikimedia.org/w/index.php?curid=180119783) |
+| Home · farmland tape | Shankarpally / Green belt | A scenic photograph featuring dense coconut an | wordpress | CC0 | Bigul Malayi | [source](https://wordpress.org/photos/photo/9306a27cca/) |
+| Home · farmland tape | Moinabad / Lake country | untitled | rawpixel | CC0 | not stated | [source](https://www.rawpixel.com/image/5962106/free-public-domain-cc0-photo) |
+| Home · farmland tape | Chevella / River plots | ATMIS Support in Beletweyne | wikimedia | CC0 | Atmis Somalia | [source](https://commons.wikimedia.org/w/index.php?curid=140782444) |
+| Home · farmland tape | Wyra / Full holding | Lebura village, gaya | wikimedia | CC0 | Abhishek Raj yadav(gaurav) | [source](https://commons.wikimedia.org/w/index.php?curid=153384283) |
+| Home · farmland tape | Medchal / Farmhouses | Palampet village and nearby farmlands, Telanga | wikimedia | CC0 | Ms Sarah Welch | [source](https://commons.wikimedia.org/w/index.php?curid=102863223) |
+| Home · story | Surveyed ground | 3rd century BCE to 4th century CE Buddhist mon | wikimedia | CC0 | Ms Sarah Welch | [source](https://commons.wikimedia.org/w/index.php?curid=103000931) |
+| Home · offerings | Apartments card (public/images) | 20150917-OSEC-LSC-0581 | flickr | PDM | USDAgov | [source](https://www.flickr.com/photos/41284017@N08/21614681361) |
+| Home · offerings | Farmlands card (public/images) | 20130920-OC-LSC-1326 | flickr | PDM | USDAgov | [source](https://www.flickr.com/photos/41284017@N08/10460713646) |
+| /farmlands | Shankarpally Green Belt | Coconut farm | rawpixel | CC0 | not stated | [source](https://www.rawpixel.com/image/6026314/coconut-farm-free-public-domain-cc0-photo) |
+| /farmlands | Moinabad Enclave | A wide view of a bitter gourd farm surrounded  | wordpress | CC0 | Bigul Malayi | [source](https://wordpress.org/photos/photo/196a185f07/) |
+| /farmlands | Chevella River Plate | The image shows a vibrant green rice paddy fie | wordpress | CC0 | Manjunath M M | [source](https://wordpress.org/photos/photo/4868259044/) |
+| /farmlands | Wyra Tract | 20110419-RD-LSC-0705 | flickr | PDM | USDAgov | [source](https://www.flickr.com/photos/41284017@N08/15748148386) |
+| /apartments | Page hero | city skyline night seen docks | rawpixel | CC0 | not stated | [source](https://www.rawpixel.com/image/3302581/free-photo-image-architecture-asphalt-banister) |
+| /apartments | Day-to-night outlook | Mumbai Night City | flickr | PDM | Vidur Malhotra | [source](https://www.flickr.com/photos/111661024@N07/18219784390) |
+| /farmlands | Page hero | Palampet village and nearby farmlands, Telanga | wikimedia | CC0 | Ms Sarah Welch | [source](https://commons.wikimedia.org/w/index.php?curid=102863223) |
+
+Replace these in Studio as real photographs of the actual grounds arrive:
+Website Settings and the Home page singleton hold the farmland tape and story
+images, the Category pages hold the hero and outlook photos, and each Farmland
+option holds its own card image. The two offerings cards are files in
+`public/images/`, not Sanity.
