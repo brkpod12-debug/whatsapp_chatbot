@@ -92,6 +92,7 @@ export default async function PropertyPage({ params }: PageProps) {
     groundHeading: "Also in this ground",
     alsoHeading: "If this is almost right.",
     viewFullListLabel: "View the full list",
+    imageNote: undefined,
     photosLabel: "Photographs",
     photosNote: "On request from the Private Advisory",
     ...(pageCopy ?? {}),
@@ -176,6 +177,9 @@ export default async function PropertyPage({ params }: PageProps) {
           {hasPhotos ? (
             <Reveal delay={0.2} className="mt-10">
               <Gallery images={galleryImages} className="lg:px-0" />
+              {copy.imageNote && (
+                <p className="stamp mt-4 text-ink/45">{copy.imageNote}</p>
+              )}
             </Reveal>
           ) : (
             <Reveal delay={0.2} className="mt-10">

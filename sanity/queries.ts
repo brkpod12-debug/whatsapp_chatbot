@@ -320,6 +320,7 @@ export type PropertyPage = {
   groundHeading: string;
   alsoHeading: string;
   viewFullListLabel: string;
+  imageNote?: string;
   photosLabel: string;
   photosNote: string;
 };

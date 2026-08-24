@@ -97,6 +97,15 @@ export default defineType({
       initialValue: "Photographs on request",
     }),
     defineField({
+      name: "imageNote",
+      title: "Caption under the photos",
+      type: "string",
+      description:
+        "Shown under the gallery. Say so here while the pictures are stock stand-ins rather than the actual flat.",
+      initialValue:
+        "Representative photograph. Pictures of this flat are shared privately on enquiry.",
+    }),
+    defineField({
       name: "photosNote",
       title: "Photos placeholder - note",
       type: "string",
