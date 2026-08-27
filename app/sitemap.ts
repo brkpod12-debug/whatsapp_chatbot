@@ -13,7 +13,7 @@ const PAGES: { path: string; priority: number }[] = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, slugs] = await Promise.all([getSiteSettings(), getPropertySlugs()]);
-  const base = (settings?.siteUrl || "https://joshproperties.in").replace(/\/$/, "");
+  const base = (settings?.siteUrl || "https://www.joshproperties.co.in").replace(/\/$/, "");
   const lastModified = new Date();
 
   return [

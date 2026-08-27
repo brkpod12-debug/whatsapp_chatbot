@@ -8,7 +8,8 @@ import { ChapterMarker } from "@/components/ui/ChapterMarker";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
 import { getCategoryPage, getEnquiryOptions, getFarmlandOptions, getFarmlandProjects, getSiteSettings } from "@/sanity/queries";
-import { buildMetadata } from "@/lib/metadata";
+import { buildMetadata, clampDescription } from "@/lib/metadata";
+import { JsonLd, breadcrumbGraph } from "@/lib/schema";
 import { urlFor } from "@/sanity/image";
 
 export const revalidate = 60;
@@ -16,9 +17,14 @@ export const revalidate = 60;
 export async function generateMetadata(): Promise<Metadata> {
   const [page, settings] = await Promise.all([getCategoryPage("farmland"), getSiteSettings()]);
   if (!settings) return {};
+  // The hero line is editorial ("Altitudes made private."). Search needs the
+  // words buyers actually type, so the tag line stays on the page and the
+  // title tag carries the keywords.
+  const cta = ` Speak to Josh Properties, ${settings.city}.`;
   return buildMetadata(settings, "/farmlands", {
-    title: page ? `${page.heroTitleLine1} ${page.heroTitleLine2 ?? ""}`.trim() : undefined,
-    description: page?.heroBody,
+    title: `Farm Land for Sale near ${settings.city}`,
+    description:
+      clampDescription(page?.heroBody || "Drone-surveyed farmland and agricultural plots for sale near Hyderabad: Shankarpally, Moinabad and Chevella, sold plot by plot.", 158 - cta.length) + cta,
   });
 }
 
@@ -40,8 +46,11 @@ export default async function FarmlandsPage() {
 
   return (
     <>
-      <PageHero eyebrow={page.heroEyebrow} title={<>{page.heroTitleLine1}<br />{page.heroTitleLine2}</>} seed="josh-farmlands"
-        image={page.heroImage ? urlFor(page.heroImage).width(2400).height(1200).url() : undefined}>
+      <JsonLd
+        data={breadcrumbGraph(settings, [{ name: "Farmlands", path: "/farmlands" }])}
+      />
+      <PageHero eyebrow={page.heroEyebrow} title={<>{page.heroTitleLine1}{" "}<br />{page.heroTitleLine2}</>} seed="josh-farmlands"
+        image={page.heroImage ? urlFor(page.heroImage).width(1800).height(900).url() : undefined}>
         <p>{page.heroBody}</p>
       </PageHero>
 
@@ -98,7 +107,7 @@ export default async function FarmlandsPage() {
                   <div className="p-7">
                     <div className="flex items-center justify-between gap-4">
                       <h3 className="font-display text-2xl font-light text-ink lg:text-3xl">{o.name}</h3>
-                      <span className={o.status === "Available" ? "eyebrow text-emerald" : "eyebrow text-ink/40"}>
+                      <span className={o.status === "Available" ? "eyebrow text-champagne" : "eyebrow text-ink/60"}>
                         {o.status}
                       </span>
                     </div>
@@ -130,7 +139,7 @@ export default async function FarmlandsPage() {
             <Reveal delay={0.3}>
               <p className="mt-6 text-[15px] leading-relaxed text-ink/50">
                 Prefer to talk first? Call{" "}
-                <a href={settings.phoneHref} className="text-emerald underline-offset-4 hover:underline">{settings.phone}</a>
+                <a href={settings.phoneHref} className="inline-flex min-h-11 items-center text-champagne underline-offset-4 hover:underline">{settings.phone}</a>
                 . A concierge answers, not a call centre.
               </p>
             </Reveal>

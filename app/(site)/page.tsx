@@ -15,6 +15,7 @@ import {
   getServices, getPromiseItems, getProcessSteps, getTestimonials, getFaqs,
 } from "@/sanity/queries";
 import type { HomePage } from "@/sanity/queries";
+import { JsonLd, faqGraph } from "@/lib/schema";
 
 export const revalidate = 60;
 
@@ -37,6 +38,7 @@ export default async function Home() {
 
   return (
     <>
+      {on("faq") && faqs.length > 0 && <JsonLd data={faqGraph(faqs)} />}
       {on("hero") && <CinematicHero copy={homePage.hero} heroVideo={settings.heroVideo} />}
       {on("trustStrip") && <TrustStrip logos={logos} />}
       {on("stats") && <Stats stats={stats} copy={homePage.stats} />}

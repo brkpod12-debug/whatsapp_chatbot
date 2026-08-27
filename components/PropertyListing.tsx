@@ -25,9 +25,9 @@ export function PropertyListing({
         </Reveal>
         <div className="mt-8 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <RevealMask delay={0.1}>
-            <h1 className="max-w-[16ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+            <h2 className="max-w-[16ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
               {heading}
-            </h1>
+            </h2>
           </RevealMask>
           <Reveal delay={0.2}>
             <p className="max-w-[46ch] text-pretty text-[15px] leading-relaxed text-ink/60">

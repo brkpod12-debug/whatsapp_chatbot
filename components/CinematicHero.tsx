@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import {
   cubicBezier,
@@ -20,8 +20,6 @@ import type { HomePage } from "@/sanity/queries";
 // expects an easing function (or array of them), unlike animation transitions
 // which accept a cubic-bezier tuple directly.
 const EASE_FN = cubicBezier(0.16, 1, 0.3, 1);
-// Same curve as a keyframe tuple, for mount transitions.
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Lerp factor per 60fps frame (spec: 0.08–0.15). Applied frame-rate
 // independently in the rAF loop so the film eases toward the target
@@ -41,10 +39,29 @@ const SMOOTH_FACTOR = 0.1;
  * smoothed progress, ending in a gradient dissolve into the Title Register
  * section. Reduced motion renders a static poster hero instead.
  */
+// Devices that actually get the scroll-scrubbed film. Phones and tablets do
+// not: seeking a multi-megabyte h264 on every rAF frame starves the mobile
+// compositor and the page stops scrolling. They keep the poster frame and the
+// same scroll-driven typography, minus the reel.
+const FILM_QUERY = "(pointer: fine) and (min-width: 1024px)";
+
+function useFilmDevice() {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(FILM_QUERY);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(FILM_QUERY).matches,
+    () => false // SSR + first paint assume "no film", so phones never fetch it
+  );
+}
+
 export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; heroVideo: string }) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
+  const film = useFilmDevice();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -70,7 +87,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
       const next = cur + (target - cur) * k;
       if (Math.abs(next - cur) > 0.00001) smooth.set(next);
 
-      const v = videoRef.current;
+      const v = film ? videoRef.current : null;
       if (v && v.readyState >= 2 && v.duration > 0) {
         const t = next * v.duration;
         // Dead-band + seeking guard: only seek when meaningfully off target.
@@ -82,10 +99,11 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduce, scrollYProgress, smooth]);
+  }, [film, reduce, scrollYProgress, smooth]);
 
   // --- unlock frame decode (muted play then pause) ---
   useEffect(() => {
+    if (!film) return;
     const v = videoRef.current;
     if (!v) return;
     const unlock = () => {
@@ -98,7 +116,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("touchstart", unlock);
     };
-  }, []);
+  }, [film]);
 
   // ─────────────────────────── Scene choreography ───────────────────────────
   // Scene 01 (0–22%): PRIVATE REAL ESTATE ADVISORY / HYDERABAD — opening title.
@@ -148,11 +166,13 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
         >
           <video
             ref={videoRef}
-            src={heroVideo}
-            poster="/hero-poster.jpg"
+            // No `src` off-film: the element renders the poster and the reel is
+            // never requested on phones.
+            src={film ? heroVideo : undefined}
+            poster="/hero-poster.webp"
             muted
             playsInline
-            preload="auto"
+            preload={film ? "auto" : "none"}
             disablePictureInPicture
             className="h-full w-full object-cover"
           />
@@ -165,39 +185,22 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
         <div className="film-grain absolute inset-0" />
 
         {/* ── Scene 01 · opening title (left aligned) ── */}
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex items-center px-6 sm:px-12 lg:px-20"
-        >
+        {/* Not aria-hidden: this scene carries the page's only <h1>. */}
+        <motion.div className="pointer-events-none absolute inset-0 flex items-center px-6 sm:px-12 lg:px-20">
           <div className="max-w-[760px]">
             <motion.div style={{ opacity: advisoryExit }}>
-              <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
-                className="h-px w-[42px] origin-left bg-emerald"
-              />
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
-                className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]"
-              >
+              <div className="hero-rule h-px w-[42px] origin-left bg-emerald" />
+              <p className="hero-kicker mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
                 {copy.kicker}
-              </motion.p>
+              </p>
             </motion.div>
             <motion.div
               style={{ opacity: hyderabadOpacity, y: hyderabadExitY }}
               className="mt-2 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
             >
-              <motion.h1
-                initial={{ y: "105%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.95, delay: 0.5, ease: EASE }}
-                className="font-display text-[clamp(2.8rem,9vw,7.5rem)] font-light leading-[1] text-paper"
-              >
+              <h1 className="hero-title font-display text-[clamp(2.8rem,9vw,7.5rem)] font-light leading-[1] text-paper">
                 {copy.place}
-              </motion.h1>
+              </h1>
             </motion.div>
           </div>
         </motion.div>
@@ -288,7 +291,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           style={{ opacity: cta, y: ctaY }}
           className="group absolute inset-x-0 bottom-10 z-40 flex justify-center px-6"
         >
-          <span className="link-underline flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/80 transition-colors duration-300 hover:text-bronze">
+          <span className="link-underline flex min-h-11 items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-ink/80 transition-colors duration-300 hover:text-bronze">
             {copy.ctaLabel}
             <ArrowRight
               size={14}
@@ -315,11 +318,11 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           style={{ opacity: indicator }}
           className="pointer-events-none absolute right-6 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex xl:right-10"
         >
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/35">01</span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/60">01</span>
           <div className="relative h-28 w-px overflow-hidden bg-paper/15">
             <motion.div className="absolute inset-0 origin-top bg-emerald/70" style={{ scaleY: smooth }} />
           </div>
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/35">04</span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/60">04</span>
         </motion.div>
       </div>
     </section>

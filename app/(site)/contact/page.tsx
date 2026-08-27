@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ContactForm } from "./ContactForm";
+import { OfficeMap } from "@/components/OfficeMap";
 import { ChapterMarker } from "@/components/ui/ChapterMarker";
 import { Reveal } from "@/components/motion/Reveal";
 import { getContactPage, getEnquiryOptions, getSiteSettings } from "@/sanity/queries";
-import { buildMetadata } from "@/lib/metadata";
+import { buildMetadata, clampDescription } from "@/lib/metadata";
+import { JsonLd, breadcrumbGraph } from "@/lib/schema";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const [page, settings] = await Promise.all([getContactPage(), getSiteSettings()]);
   if (!settings) return {};
+  const cta = ` Call ${settings.phone} or send a message.`;
   return buildMetadata(settings, "/contact", {
-    title: page?.heading,
-    description: page?.body,
+    // The page heading is editorial; the title tag has to say what the page is.
+    title: `Contact the ${settings.city} Advisory Desk`,
+    description:
+      clampDescription(page?.body || "", 158 - cta.length) + cta,
   });
 }
 
@@ -32,6 +37,7 @@ export default async function ContactPage() {
 
   return (
     <>
+      <JsonLd data={breadcrumbGraph(settings, [{ name: "Contact", path: "/contact" }])} />
       <section className="bg-paper">
         <div className="mx-auto max-w-[1200px] px-6 pb-28 pt-28 sm:px-12 lg:px-20 lg:pb-40 lg:pt-32">
           <Reveal>
@@ -67,7 +73,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={settings.phoneHref}
-                      className="font-display text-2xl font-light text-ink transition-colors hover:text-emerald"
+                      className="inline-flex min-h-11 items-center font-display text-2xl font-light text-ink transition-colors hover:text-champagne"
                     >
                       {settings.phone}
                     </a>
@@ -76,7 +82,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={`mailto:${settings.email}`}
-                      className="font-display text-xl font-light text-ink transition-colors [overflow-wrap:anywhere] hover:text-emerald sm:text-2xl"
+                      className="inline-flex min-h-11 items-center font-display text-xl font-light text-ink transition-colors [overflow-wrap:anywhere] hover:text-champagne sm:text-2xl"
                     >
                       {settings.email}
                     </a>
@@ -92,13 +98,7 @@ export default async function ContactPage() {
                     <p className="mt-1 text-sm text-ink/50">{page.officeNote}</p>
                   </address>
                   <div className="vignette relative mt-8 aspect-[4/3] overflow-hidden rounded-[2px] bg-mist">
-                    <iframe
-                      title={`${settings.name}, ${settings.address}`}
-                      src={`https://maps.google.com/maps?q=${encodeURIComponent(settings.address)}&z=15&output=embed`}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      className="absolute inset-0 h-full w-full border-0 grayscale-[0.35]"
-                    />
+                    <OfficeMap address={settings.address} name={settings.name} />
                   </div>
                 </div>
               </Reveal>

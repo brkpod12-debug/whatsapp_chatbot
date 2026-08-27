@@ -45,7 +45,7 @@ export function Faq({ items, copy }: { items: FaqItem[]; copy: HomePage["faqSect
             type="button"
             onClick={toggleAll}
             aria-expanded={allOpen}
-            className="shrink-0 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate transition-colors duration-300 hover:text-emerald"
+            className="inline-flex min-h-11 shrink-0 items-center py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate transition-colors duration-300 hover:text-emerald"
           >
             {allOpen ? "Collapse all" : "Expand all"}
           </button>

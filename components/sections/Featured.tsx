@@ -58,7 +58,7 @@ export function Featured({ properties, copy }: { properties: Property[]; copy: H
               <a
                 key={l.href}
                 href={l.href}
-                className="eyebrow group flex items-center gap-2 text-slate transition-colors hover:text-emerald"
+                className="eyebrow group flex min-h-11 items-center gap-2 text-slate transition-colors hover:text-emerald"
               >
                 {l.label}
                 <span className="h-px w-8 bg-slate/50 transition-all duration-300 group-hover:w-14 group-hover:bg-emerald" />

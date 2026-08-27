@@ -4,6 +4,9 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Check, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
+
+const FORM_ID = "contact-concierge";
 
 type FormState = {
   name: string;
@@ -72,7 +75,7 @@ export function ContactForm({
       return;
     }
     const text = [
-      `New enquiry - joshproperties.in`,
+      `New enquiry - joshproperties.co.in`,
       ``,
       `Name: ${form.name}`,
       `Phone: ${form.phone}`,
@@ -80,6 +83,9 @@ export function ContactForm({
       `Budget: ${form.budget || "-"}`,
       form.message ? `\nNotes:\n${form.message}` : "",
     ].join("\n");
+    // window.open bypasses the delegated link listener, so the lead is
+    // reported here.
+    track("generate_lead", { method: "whatsapp", form: FORM_ID });
     window.open(
       `${whatsapp}?text=${encodeURIComponent(text)}`,
       "_blank",
@@ -90,7 +96,7 @@ export function ContactForm({
 
   // text-base (16px) keeps iOS Safari from auto-zooming into the field.
   const inputClass =
-    "w-full bg-transparent py-3 text-base text-ink placeholder:text-ink/35 focus:outline-none";
+    "w-full bg-transparent py-3 text-base text-ink placeholder:text-ink/60 focus:outline-none";
 
   if (sent) {
     return (
@@ -164,7 +170,7 @@ export function ContactForm({
               type="button"
               onClick={() => setForm((f) => ({ ...f, interest: i }))}
               className={cn(
-                "border px-4 py-2 text-[13px] transition-colors",
+                "inline-flex min-h-11 items-center border px-4 py-2 text-[13px] transition-colors",
                 form.interest === i
                   ? "border-emerald bg-emerald/10 text-ink"
                   : "border-emerald/30 text-ink/60 hover:border-emerald/60"
@@ -185,7 +191,7 @@ export function ContactForm({
               type="button"
               onClick={() => setForm((f) => ({ ...f, budget: b }))}
               className={cn(
-                "border px-4 py-2 text-[13px] transition-colors",
+                "inline-flex min-h-11 items-center border px-4 py-2 text-[13px] transition-colors",
                 form.budget === b
                   ? "border-emerald bg-emerald/10 text-ink"
                   : "border-emerald/30 text-ink/60 hover:border-emerald/60"
@@ -230,7 +236,7 @@ export function ContactForm({
         <Send size={15} strokeWidth={1.5} />
         Enquire privately
       </button>
-      <p className="text-[13px] text-ink/45">
+      <p className="text-[13px] text-ink/60">
         No walk-ins, no pressure, no mailing list.
       </p>
     </form>

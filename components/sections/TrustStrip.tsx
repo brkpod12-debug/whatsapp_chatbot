@@ -11,12 +11,12 @@ export function TrustStrip({ logos }: { logos: PartnerLogo[] }) {
               key={`${logo.name}-${i}`}
               className="group/item relative flex items-baseline gap-3"
             >
-              <span className="font-display text-xl font-medium tracking-tight text-ink/45 transition-colors duration-300 hover:text-ink/85">
+              <span className="font-display text-xl font-medium tracking-tight text-ink/60 transition-colors duration-300 hover:text-ink/85">
                 {logo.name}
               </span>
               <span
                 aria-hidden={i >= logos.length}
-                className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-ink/30 transition-colors duration-300 group-hover/item:text-ink/60 md:inline"
+                className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55 transition-colors duration-300 group-hover/item:text-ink/60 md:inline"
               >
                 {logo.note}
               </span>

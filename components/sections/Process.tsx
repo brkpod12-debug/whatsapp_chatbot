@@ -1,25 +1,35 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ProcessStep, HomePage } from "@/sanity/queries";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
 import { IstClock } from "@/components/ui/IstClock";
 import { WaxSeal } from "@/components/ui/WaxSeal";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage["process"] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
 
+  // GSAP is ~70 KB and this section is well below the fold, so it is fetched
+  // when the effect runs rather than sitting on the page's critical path.
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || reduce) return;
-    const ctx = gsap.context(() => {
+
+    let ctx: { revert: () => void } | undefined;
+    let cancelled = false;
+
+    void (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      ctx = gsap.context(() => {
       const line = section.querySelector<HTMLElement>(".method-progress");
       if (line) {
         gsap.fromTo(
@@ -63,8 +73,13 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
           onEnter: () => step.classList.add("is-active"),
         });
       });
-    }, section);
-    return () => ctx.revert();
+      }, section);
+    })();
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, [reduce]);
 
   return (
@@ -106,7 +121,7 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
                   {copy.intro}
                 </p>
               </Reveal>
-              <p className="stamp mt-8 text-paper/35">
+              <p className="stamp mt-8 text-paper/60">
                 Doc · <IstClock precision="second" />
               </p>
             </div>
@@ -123,8 +138,14 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
             />
             <ol className="space-y-14 lg:space-y-20">
               {steps.map((step, i) => (
-                <Reveal key={step.step} delay={Math.min(i * 0.05, 0.15)}>
-                  <li className="method-step relative grid grid-cols-[44px_1fr] gap-6 lg:gap-10">
+                <motion.li
+                  key={step.step}
+                  initial={reduce ? false : { opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.7, delay: Math.min(i * 0.05, 0.15), ease: [0.16, 1, 0.3, 1] }}
+                  className="method-step relative grid grid-cols-[44px_1fr] gap-6 lg:gap-10"
+                >
                     <span className="method-num relative z-10 mt-1 flex h-[44px] w-[44px] items-center justify-center border bg-carbon font-mono text-[11px] tracking-[0.1em]">
                       {step.step}
                     </span>
@@ -141,15 +162,14 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
                         {step.description}
                       </p>
                     </div>
-                  </li>
-                </Reveal>
+                </motion.li>
               ))}
             </ol>
 
             {/* The method closes the way a file does: stamped, then set down. */}
             <div className="mt-20 flex items-center gap-6 border-t border-paper/15 pt-10">
               <WaxSeal label="Advisory · Delivered" className="h-20 w-20 shrink-0" />
-              <p className="stamp text-paper/45">
+              <p className="stamp text-paper/60">
                 Advisory
                 <br />
                 delivered

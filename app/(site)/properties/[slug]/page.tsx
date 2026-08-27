@@ -10,7 +10,8 @@ import {
   getSiteSettings,
 } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
-import { buildMetadata } from "@/lib/metadata";
+import { buildMetadata, clampDescription, locality } from "@/lib/metadata";
+import { JsonLd, breadcrumbGraph, propertyGraph } from "@/lib/schema";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import type { Property } from "@/sanity/queries";
 import { PageHero } from "@/components/sections/PageHero";
@@ -42,16 +43,52 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!settings) return { title: "Property · Josh Properties" };
   if (!property) return { title: "Property · Josh Properties" };
   const ogImage = property.seo?.ogImage ?? property.image;
+  const { title, description } = seoCopy(property, settings.city);
   return buildMetadata(settings, `/properties/${slug}`, {
-    title: property.seo?.title || property.title,
-    description:
-      property.seo?.description ||
-      `${property.short} ${property.location}. ${property.price} · ${property.area}.`,
+    title,
+    description,
     openGraph: {
       images: ogImage ? [{ url: urlFor(ogImage).width(1200).height(630).url() }] : undefined,
     },
     robots: property.seo?.noIndex ? { index: false, follow: false } : undefined,
   });
+}
+
+/** What buyers actually type into Google, per category. */
+const CATEGORY_NOUN: Record<Property["category"], string> = {
+  villa: "Villa",
+  apartment: "Flat",
+  farmland: "Farm Land",
+};
+
+const CATEGORY_LIST: Record<Property["category"], { name: string; path: string }> = {
+  villa: { name: "Villas", path: "/villas" },
+  apartment: { name: "Apartments", path: "/apartments" },
+  farmland: { name: "Farmlands", path: "/farmlands" },
+};
+
+/** Keyword-led title and a description that always keeps its call to action. */
+function seoCopy(property: Property, city: string) {
+  const noun = CATEGORY_NOUN[property.category];
+  const place = locality(property.location, city);
+  const beds = property.beds ? `${property.beds} ` : "";
+  // Listing names usually already carry the locality ("Nizampet Resale I").
+  // Repeating it costs ~15 characters of a 60-character title for nothing.
+  const namesPlace = property.title.toLowerCase().includes(place.toLowerCase());
+  const title =
+    property.seo?.title ||
+    `${property.title}: ${beds}${noun}${namesPlace ? "" : ` in ${place}`}`;
+
+  const cta = ` Enquire with Josh Properties, ${city}.`;
+  const facts = [property.beds, property.area, property.price].filter(Boolean).join(" · ");
+  const description =
+    property.seo?.description ||
+    clampDescription(
+      `${beds}${noun} for sale in ${place}, ${city}. ${facts}. ${property.short}`,
+      158 - cta.length
+    ) + cta;
+
+  return { title, description };
 }
 
 const quickFactKeys = ["approval", "condition", "facing", "floor", "age", "ventilation"];
@@ -100,7 +137,7 @@ export default async function PropertyPage({ params }: PageProps) {
 
   const embedSrc = getYouTubeEmbedUrl(property.youtubeUrl);
 
-  const heroUrl = property.image ? urlFor(property.image).width(2400).height(1200).url() : undefined;
+  const heroUrl = property.image ? urlFor(property.image).width(1800).height(900).url() : undefined;
   const galleryImages =
     property.gallery && property.gallery.length > 0
       ? property.gallery.map((img, i) => ({
@@ -119,8 +156,19 @@ export default async function PropertyPage({ params }: PageProps) {
     quickFactKeys.some((k) => s.label.toLowerCase().includes(k))
   );
 
+  const list = CATEGORY_LIST[property.category];
+
   return (
     <>
+      <JsonLd
+        data={[
+          propertyGraph(settings, property, heroUrl),
+          breadcrumbGraph(settings, [
+            list,
+            { name: property.title, path: `/properties/${property.slug}` },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow={`${property.category} · ${property.location.trim()}`}
         title={property.title}
@@ -178,7 +226,7 @@ export default async function PropertyPage({ params }: PageProps) {
             <Reveal delay={0.2} className="mt-10">
               <Gallery images={galleryImages} className="lg:px-0" />
               {copy.imageNote && (
-                <p className="stamp mt-4 text-ink/45">{copy.imageNote}</p>
+                <p className="stamp mt-4 text-ink/60">{copy.imageNote}</p>
               )}
             </Reveal>
           ) : (
@@ -240,7 +288,7 @@ export default async function PropertyPage({ params }: PageProps) {
               ))}
             </div>
 
-            {inGround.length >= 0 && (
+            {(
               <Reveal delay={0.2} className="mt-10">
                 <div className="border-t border-ink/15 pt-8">
                   <p className="eyebrow text-slate">{copy.factsOriginLabel}</p>
@@ -260,17 +308,22 @@ export default async function PropertyPage({ params }: PageProps) {
               <div className="border border-ink/15 bg-paper">
                 <div className="flex items-center justify-between border-b border-ink/15 px-7 py-5">
                   <p className="eyebrow text-slate">{copy.factsKicker}</p>
-                  <span className="stamp text-slate">Pragathi Nagar · Hyderabad</span>
+                  <span className="stamp text-slate">
+                    {property.location.trim()} · {settings.city}
+                  </span>
                 </div>
                 {property.specs.length > 0 ? (
                   <dl className="divide-y divide-ink/10 px-7 py-2">
-                    {property.specs.map((s, i) => (
-                      <Reveal key={s.label} delay={0.05 * i}>
-                        <div className="flex items-baseline justify-between gap-6 py-4 transition-colors duration-300 hover:bg-mist/50">
-                          <dt className="text-[13px] uppercase tracking-[0.12em] text-ink/50">{s.label}</dt>
-                          <dd className="text-right font-display text-lg font-light text-ink">{s.value}</dd>
-                        </div>
-                      </Reveal>
+                    {/* No wrapper element between <dl> and its <dt>/<dd>: the
+                        list is revealed as a whole, one level up. */}
+                    {property.specs.map((s) => (
+                      <div
+                        key={s.label}
+                        className="flex items-baseline justify-between gap-6 py-4 transition-colors duration-300 hover:bg-mist/50"
+                      >
+                        <dt className="text-[13px] uppercase tracking-[0.12em] text-ink/60">{s.label}</dt>
+                        <dd className="text-right font-display text-lg font-light text-ink">{s.value}</dd>
+                      </div>
                     ))}
                   </dl>
                 ) : (
@@ -329,7 +382,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <Reveal delay={0.2}>
                 <Link
                   href={listHref}
-                  className="link-underline eyebrow group flex items-center gap-2 whitespace-nowrap text-slate transition-colors hover:text-emerald"
+                  className="link-underline eyebrow group flex min-h-11 items-center gap-2 whitespace-nowrap text-slate transition-colors hover:text-emerald"
                 >
                   {copy.viewFullListLabel}
                   <span className="h-px w-8 bg-slate/50 transition-all duration-300 group-hover:w-14 group-hover:bg-emerald" />

@@ -48,7 +48,7 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
                   <h2 className="font-display text-4xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-5xl">
                     {copy.headingPlain}
                     <br />
-                    <em className="italic text-emerald">{copy.headingItalic}</em>
+                    <em className="italic text-champagne">{copy.headingItalic}</em>
                   </h2>
                 </RevealMask>
 

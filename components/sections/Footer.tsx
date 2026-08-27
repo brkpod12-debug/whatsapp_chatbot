@@ -12,7 +12,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
       />
       {/* Large magazine wordmark */}
       <div aria-hidden className="pointer-events-none relative select-none">
-        <p className="px-6 text-center font-display text-[clamp(5rem,17vw,15rem)] font-light leading-[0.8] tracking-[0.1em] text-paper/[0.045]">
+        <p aria-hidden className="px-6 text-center font-display text-[clamp(5rem,17vw,15rem)] font-light leading-[0.8] tracking-[0.1em] text-paper/[0.045]">
           JOSH
         </p>
       </div>
@@ -72,7 +72,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 <li key={l.label}>
                   <a
                     href={l.href}
-                    className="link-underline text-[15px] text-paper/70 transition-colors hover:text-emerald"
+                    className="link-underline inline-flex min-h-11 items-center text-[15px] text-paper/70 transition-colors hover:text-emerald"
                   >
                     {l.label}
                   </a>
@@ -88,7 +88,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 <li key={l}>
                   <a
                     href="/farmlands"
-                    className="link-underline text-[15px] text-paper/70 transition-colors hover:text-emerald"
+                    className="link-underline inline-flex min-h-11 items-center text-[15px] text-paper/70 transition-colors hover:text-emerald"
                   >
                     {l}
                   </a>
@@ -104,16 +104,16 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 {settings.address}
               </p>
               <p>
-                <a href={settings.phoneHref} className="link-underline text-[15px] text-paper/70 transition-colors hover:text-emerald">
+                <a href={settings.phoneHref} className="link-underline inline-flex min-h-11 items-center text-[15px] text-paper/70 transition-colors hover:text-emerald">
                   {settings.phone}
                 </a>
               </p>
               <p>
-                <a href={settings.whatsapp} className="link-underline text-[15px] text-paper/70 transition-colors hover:text-emerald">
+                <a href={settings.whatsapp} className="link-underline inline-flex min-h-11 items-center text-[15px] text-paper/70 transition-colors hover:text-emerald">
                   WhatsApp
                 </a>
               </p>
-              <p className="text-[13px] text-paper/40">{settings.hours}</p>
+              <p className="text-[13px] text-paper/65">{settings.hours}</p>
             </address>
           </div>
         </div>
@@ -124,13 +124,13 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           <p className="eyebrow text-slate">
             RERA no. {settings.rera.number} · Registration by counsel at every close
           </p>
-          <p className="text-[12px] text-paper/35">
+          <p className="text-[12px] text-paper/60">
             © {new Date().getFullYear()} {settings.name}. {settings.legalName} · All rights reserved.
           </p>
         </div>
         {settings.legal?.disclaimer && (
           <div className="mt-6 border-t border-paper/10 pt-6">
-            <p className="max-w-[90ch] text-[12px] leading-relaxed text-paper/30">
+            <p className="max-w-[90ch] text-[12px] leading-relaxed text-paper/60">
               {settings.legal.disclaimer}
             </p>
           </div>
@@ -138,12 +138,12 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         {(settings.legal?.privacyUrl || settings.legal?.termsUrl) && (
           <div className="mt-4 flex flex-wrap gap-6">
             {settings.legal.privacyUrl && (
-              <a href={settings.legal.privacyUrl} target="_blank" rel="noopener noreferrer" className="text-[12px] text-paper/45 transition-colors hover:text-paper">
+              <a href={settings.legal.privacyUrl} target="_blank" rel="noopener noreferrer" className="text-[12px] text-paper/60 transition-colors hover:text-paper">
                 Privacy policy
               </a>
             )}
             {settings.legal.termsUrl && (
-              <a href={settings.legal.termsUrl} target="_blank" rel="noopener noreferrer" className="text-[12px] text-paper/45 transition-colors hover:text-paper">
+              <a href={settings.legal.termsUrl} target="_blank" rel="noopener noreferrer" className="text-[12px] text-paper/60 transition-colors hover:text-paper">
                 Terms of use
               </a>
             )}

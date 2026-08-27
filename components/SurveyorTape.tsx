@@ -206,7 +206,7 @@ export function SurveyorTape({ grounds }: { grounds: Ground[] }) {
                   </span>
                 ))}
               </h3>
-              <p className="mt-1 text-[13px] text-paper/50">{g.note}</p>
+              <p className="mt-1 text-[13px] text-paper/70">{g.note}</p>
             </article>
           ))}
         </div>
@@ -234,7 +234,7 @@ export function SurveyorTape({ grounds }: { grounds: Ground[] }) {
                   ))}
                 </div>
               </div>
-              <p className="stamp mt-3 text-paper/40">Surveyed ground, west to east</p>
+              <p className="stamp mt-3 text-paper/65">Surveyed ground, west to east</p>
             </div>
 
             <p className="stamp shrink-0 text-paper/60">

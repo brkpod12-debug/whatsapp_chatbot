@@ -102,13 +102,13 @@ export function FinalCta({
         </Reveal>
         <Reveal delay={0.4}>
           <div className="mx-auto mt-16 flex max-w-3xl flex-col items-center justify-between gap-3 border-t border-paper/15 pt-8 sm:flex-row sm:gap-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/40">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/65">
               {copy.founded}
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/40">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/65">
               {copy.byAppointment}
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/40">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/65">
               RERA {reraNumber}
             </p>
           </div>

@@ -10,6 +10,9 @@ const SESSION_KEY = "jp_loaded";
 
 const noopSubscribe = () => () => {};
 
+/** Coarse pointer = phone/tablet. The foil press is a desktop-only flourish. */
+const COARSE = "(pointer: coarse)";
+
 /** True only on the session's first visit. SSR and first client paint agree on `false`. */
 function useFirstVisit() {
   return useSyncExternalStore(
@@ -29,14 +32,18 @@ export function SealLoader() {
   const reduce = useReducedMotion();
   const [dismissed, setDismissed] = useState(false);
   const [typed, setTyped] = useState(0);
+  // On phones this curtain held the page for 1.6s on every first visit: it
+  // blocked scroll and it was what LCP actually measured. Desktop keeps it.
+  const coarse = useSyncExternalStore(noopSubscribe, () => window.matchMedia(COARSE).matches, () => false);
 
-  const open = firstVisit && !reduce && !dismissed;
+  const open = firstVisit && !reduce && !coarse && !dismissed;
 
   useEffect(() => {
     if (!open) return;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const perChar = 1400 / STAMP_LINE.length;
+    const perChar = 900 / STAMP_LINE.length;
     const typer = window.setInterval(() => {
       setTyped((n) => (n >= STAMP_LINE.length ? n : n + 1));
     }, perChar);
@@ -44,12 +51,13 @@ export function SealLoader() {
     const done = window.setTimeout(() => {
       sessionStorage.setItem(SESSION_KEY, "1");
       setDismissed(true);
-    }, 1600);
+    }, 1000);
 
     return () => {
       window.clearInterval(typer);
       window.clearTimeout(done);
-      document.body.style.overflow = "";
+      // Restore, never blank: the mobile menu owns this same property.
+      document.body.style.overflow = prevOverflow;
     };
   }, [open]);
 
@@ -70,7 +78,7 @@ export function SealLoader() {
             <Seal className="h-[220px] w-[220px]" />
           </motion.div>
 
-          <p className="stamp mt-10 h-4 text-paper/45">{STAMP_LINE.slice(0, typed)}</p>
+          <p className="stamp mt-10 h-4 text-paper/60">{STAMP_LINE.slice(0, typed)}</p>
         </motion.div>
       )}
     </AnimatePresence>

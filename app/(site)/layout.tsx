@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { display, body, mono } from "../fonts";
 import { getSiteSettings } from "@/sanity/queries";
 import { buildMetadata } from "@/lib/metadata";
+import { JsonLd, baseUrl, organizationGraph } from "@/lib/schema";
+import { urlFor } from "@/sanity/image";
 import { Navbar } from "@/components/sections/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { FloatingCta } from "@/components/FloatingCta";
@@ -10,6 +12,7 @@ import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { PremiumCursor } from "@/components/motion/PremiumCursor";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { SealLoader } from "@/components/motion/SealLoader";
+import { Analytics } from "@/components/Analytics";
 import "../globals.css";
 
 export const viewport: Viewport = {
@@ -39,38 +42,23 @@ export default async function RootLayout({
     throw new Error("siteSettings document is missing — check Sanity Studio");
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    "@id": `${settings.siteUrl || "https://joshproperties.in"}#agency`,
-    name: settings.name,
-    legalName: settings.legalName,
-    description: settings.position,
-    foundingDate: settings.org?.foundingYear || "2017",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: settings.org?.streetAddress || "",
-      addressLocality: settings.org?.addressLocality || "",
-      addressRegion: settings.state,
-      postalCode: settings.org?.postalCode || "",
-      addressCountry: "IN",
-    },
-    telephone: settings.phone,
-    email: settings.email,
-    openingHours: settings.org?.openingHours || "",
-    priceRange: settings.org?.priceRange || "₹₹₹",
-  };
+  const base = baseUrl(settings);
+  const logoUrl = settings.logo
+    ? urlFor(settings.logo).width(512).url()
+    : `${base}/logo-mark.png`;
 
   return (
     <html
       lang="en"
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="preload" as="image" href="/hero-poster.webp" fetchPriority="high" />
+      </head>
       <body className="flex min-h-full flex-col bg-paper font-body text-ink">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={organizationGraph(settings, logoUrl)} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:bg-emerald focus:px-5 focus:py-3 focus:text-carbon"
@@ -89,6 +77,7 @@ export default async function RootLayout({
         </main>
         <Footer settings={settings} />
         <FloatingCta whatsapp={settings.whatsapp} />
+        <Analytics />
       </body>
     </html>
   );

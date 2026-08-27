@@ -5,12 +5,21 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Seal } from "@/components/ui/Seal";
 import type { SiteSettings } from "@/sanity/queries";
 
+/** Routes that open on a dark hero, where the header can sit transparent. */
+const DARK_HERO = ["/", "/villas", "/apartments", "/farmlands"];
+
 export function Navbar({ settings }: { settings: SiteSettings }) {
   const [open, setOpen] = useState(false);
-  const [solid, setSolid] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const darkHero = DARK_HERO.includes(pathname) || pathname.startsWith("/properties/");
+  // On a light page the header has to carry its own background from the first
+  // frame, or the paper-coloured wordmark disappears into the paper.
+  const solid = scrolled || !darkHero;
 
   useEffect(() => {
     if (!open) return;
@@ -26,7 +35,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
   }, [open]);
 
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -44,8 +53,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="group flex items-center gap-3 sm:gap-3.5"
-          aria-label={`${settings.name}, home`}
+          className="group flex min-h-11 items-center gap-3 sm:gap-3.5"
         >
           <Image
             src="/logo-mark.png"
@@ -62,7 +70,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
               }`}
             >
               {settings.name.toUpperCase()}
-            </span>
+            </span>{" "}
             <span
               className={`mt-[6px] font-mono text-[8px] uppercase tracking-[0.3em] transition-colors duration-300 sm:text-[9px] ${
                 solid ? "text-champagne" : "text-emerald/80"
@@ -78,7 +86,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
             <a
               key={l.href}
               href={l.href}
-              className={`eyebrow group relative transition-colors duration-200 hover:text-emerald ${
+              className={`eyebrow group relative inline-flex min-h-11 items-center transition-colors duration-200 hover:text-emerald ${
                 solid ? "text-ink/60" : "text-paper/75"
               }`}
             >
@@ -94,7 +102,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
         <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className={`hidden border px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 sm:inline-flex ${
+            className={`hidden min-h-11 items-center border px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 sm:inline-flex ${
               solid
                 ? "border-ink/30 text-ink hover:border-emerald hover:bg-emerald/[0.06]"
                 : "border-paper/40 text-paper hover:border-paper hover:bg-paper/10"
@@ -177,7 +185,7 @@ export function Navbar({ settings }: { settings: SiteSettings }) {
                     <a href={settings.phoneHref} className="stamp text-paper">
                       {settings.phone}
                     </a>
-                    <span className="text-[12px] text-paper/45">{settings.hours}</span>
+                    <span className="text-[12px] text-paper/60">{settings.hours}</span>
                   </div>
                 </div>
               </motion.div>

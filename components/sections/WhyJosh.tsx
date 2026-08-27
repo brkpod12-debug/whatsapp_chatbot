@@ -76,7 +76,7 @@ function Pillar({ item, index }: { item: PromiseItem; index: number }) {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls={panelId}
-            className="mt-5 inline-flex items-center gap-2 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate transition-colors duration-300 hover:text-emerald"
+            className="mt-5 inline-flex min-h-11 items-center gap-2 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate transition-colors duration-300 hover:text-emerald"
           >
             <Plus
               size={12}

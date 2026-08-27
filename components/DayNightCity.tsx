@@ -134,7 +134,7 @@ export function DayNightCity({ image, kicker = "Outlook · day to night", intro 
           </span>
         </div>
 
-        <div className="relative mt-4 h-8">
+        <div className="relative mt-4 h-11">
           <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-emerald/30" />
           <div
             className="absolute left-0 top-1/2 h-px -translate-y-1/2 bg-emerald"

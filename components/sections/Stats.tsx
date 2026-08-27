@@ -70,10 +70,10 @@ export function Stats({ stats, copy }: { stats: Stat[]; copy: HomePage["stats"] 
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-paper/15 px-6 py-4 sm:px-10">
-              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/35">
+              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-paper/60">
                 As of <IstClock /> · {copy.footerNote}
               </span>
-              <span aria-hidden className="hidden font-mono text-[10px] uppercase tracking-[0.24em] text-paper/35 sm:inline">
+              <span aria-hidden className="hidden font-mono text-[10px] uppercase tracking-[0.24em] text-paper/60 sm:inline">
                 {copy.eoe}
               </span>
             </div>
