@@ -48,7 +48,7 @@ export function FinalCta({
           <Seal className="mx-auto h-16 w-16 text-emerald/85" />
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="mx-auto mt-8 max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-paper lg:text-7xl">
+          <h2 className="mx-auto mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-paper lg:text-7xl">
             {copy.headingPlain}{" "}
             <span className="text-emerald">{copy.headingEmphasis}</span>
           </h2>
@@ -65,7 +65,6 @@ export function FinalCta({
                 href="/contact"
                 variant="filled"
                 size="lg"
-                data-cursor="ENQUIRE"
                 className="group w-full sm:w-auto"
               >
                 {copy.ctaEnquireLabel}

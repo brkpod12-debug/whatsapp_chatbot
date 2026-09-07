@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface MagneticButtonProps {
@@ -21,6 +21,7 @@ export function MagneticButton({
   strength = 10,
   label,
 }: MagneticButtonProps) {
+  const reduce = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -30,7 +31,7 @@ export function MagneticButton({
 
   function onPointerMove(e: React.PointerEvent) {
     const el = ref.current;
-    if (!el) return;
+    if (!el || reduce) return;
     const rect = el.getBoundingClientRect();
     const dx = e.clientX - (rect.left + rect.width / 2);
     const dy = e.clientY - (rect.top + rect.height / 2);

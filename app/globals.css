@@ -33,26 +33,12 @@
 }
 
 :root {
-  --paper: #faf8f3;
-  --ink: #0a0a09;
-  --forest: #11110f;
   --brass: #c1a36d;
-  --champagne: #775f34;
-  --bronze: #7b6746;
-  --clay: #b9b2a3;
-  --line: #e5ddd0;
-  --paper-dark: #efeae1;
-
-  --aurum: #e3c98a;
-  --ash: #847d6f;
   --gold-glow: rgba(193, 163, 109, 0.16);
-  --ink-veil: rgba(7, 7, 6, 0.55);
   /* Precious resource: at most two uses per page (see AGENTS.md copy discipline). */
   --wax-red: #8a2a1f;
 
-  --font-display: var(--font-display);
   --font-sans: var(--font-body);
-  --font-mono: var(--font-mono);
 
   --text-hero: clamp(48px, 8vw, 120px);
   --text-h2: clamp(36px, 5vw, 64px);
@@ -198,28 +184,20 @@ select {
 
   /* Sibling-dim for the Collection grid. Scoped to hover-capable pointers so a
      tap on touch never leaves the other folios stuck at reduced opacity. */
-  .folio-desk a[data-cursor="VIEW"] {
+  .folio-desk .folio-item {
     transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .folio-desk:hover a[data-cursor="VIEW"]:not(:hover) {
+    .folio-desk:hover .folio-item:not(:hover) {
       opacity: 0.6;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .folio-desk a[data-cursor="VIEW"] {
+    .folio-desk .folio-item {
       transition: none;
     }
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .text-pretty {
-    text-wrap: pretty;
   }
 
   .film-grain {
@@ -314,37 +292,7 @@ select {
   animation: marquee 45s linear infinite;
 }
 
-@keyframes heroZoom {
-  from {
-    transform: scale(1.08);
-  }
-  to {
-    transform: scale(1.16);
-  }
-}
 
-@keyframes scrollLine {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  45% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  55% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-
-.animate-scroll-line {
-  animation: scrollLine 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
 
 /* Sealing wax: a brass conic sweep travelling the border of the advisory row.
    Painted into the border box only, via a mask, so the row stays sharp-edged
@@ -374,7 +322,17 @@ select {
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   animation: waxTurn 8s linear infinite;
+  animation-play-state: paused;
+}
+
+/* The sweep answers a pointer; it does not run at rest. */
+.wax-border:hover::before,
+.wax-border:focus-within::before {
+  opacity: 1;
+  animation-play-state: running;
 }
 
 @property --wax-angle {
@@ -391,26 +349,6 @@ select {
 
 @media (prefers-reduced-motion: reduce) {
   .wax-border::before {
-    animation: none;
-  }
-}
-
-/* Folio seal: one slow revolution, used as a resting watermark on the story card. */
-@keyframes sealTurn {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-seal-turn {
-  animation: sealTurn 60s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-seal-turn {
     animation: none;
   }
 }
@@ -477,13 +415,6 @@ select {
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
     animation: none;
-  }
-  .animate-hero-zoom {
-    animation: none;
-  }
-  .animate-scroll-line {
-    animation: none;
-    transform: scaleY(1);
   }
   .animate-wave {
     animation: none;

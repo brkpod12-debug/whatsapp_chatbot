@@ -51,13 +51,13 @@ export function Stats({ stats, copy }: { stats: Stat[]; copy: HomePage["stats"] 
                         bare stem, so "III"/"IV" read as slashes at this size. */}
                     <FadeIn
                       delay={0.1 + i * 0.08}
-                      className="font-display text-[32px] font-light leading-none tracking-[0.08em] text-brass/80"
+                      className="font-display text-[32px] leading-none tracking-[0.08em] text-brass/80"
                     >
                       {stat.numeral}
                     </FadeIn>
 
                     <div>
-                      <span className="font-display text-4xl font-light leading-none text-emerald tabular-nums whitespace-nowrap sm:text-6xl lg:text-7xl">
+                      <span className="font-display text-4xl leading-none text-emerald tabular-nums whitespace-nowrap sm:text-6xl lg:text-7xl">
                         <CountUp value={stat.value} suffix={stat.suffix} />
                       </span>
                       <p className="mt-4 max-w-[16ch] text-[13px] leading-snug text-paper/80 sm:mt-6 sm:text-[15px]">

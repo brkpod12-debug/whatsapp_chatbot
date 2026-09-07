@@ -1,4 +1,5 @@
-﻿import type { Property, HomePage } from "@/sanity/queries";
+﻿import Link from "next/link";
+import type { Property, HomePage } from "@/sanity/queries";
 import { ChapterMarker } from "@/components/ui/ChapterMarker";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealMask } from "@/components/motion/RevealMask";
@@ -15,7 +16,7 @@ export function Featured({ properties, copy }: { properties: Property[]; copy: H
           <ChapterMarker kicker="The collection" />
         </Reveal>
         <RevealMask delay={0.1}>
-          <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+          <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
             {copy.heading}
           </h2>
         </RevealMask>
@@ -55,14 +56,14 @@ export function Featured({ properties, copy }: { properties: Property[]; copy: H
               { label: "All apartments", href: "/apartments" },
               { label: "All farmlands", href: "/farmlands" },
             ].map((l) => (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 className="eyebrow group flex min-h-11 items-center gap-2 text-slate transition-colors hover:text-emerald"
               >
                 {l.label}
                 <span className="h-px w-8 bg-slate/50 transition-all duration-300 group-hover:w-14 group-hover:bg-emerald" />
-              </a>
+              </Link>
             ))}
           </div>
         </Reveal>

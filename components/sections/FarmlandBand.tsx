@@ -15,7 +15,7 @@ export function FarmlandBand({ copy }: { copy: HomePage["farmlandBand"] }) {
               <ChapterMarker kicker="The farmland" tone="dark" />
             </Reveal>
             <RevealMask delay={0.1}>
-              <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-paper lg:text-7xl">
+              <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-paper lg:text-7xl">
                 {copy.heading}
               </h2>
             </RevealMask>
@@ -23,7 +23,6 @@ export function FarmlandBand({ copy }: { copy: HomePage["farmlandBand"] }) {
           <Reveal delay={0.2}>
             <a
               href="/farmlands"
-              data-cursor="EXPLORE"
               className="group inline-flex items-center gap-3 border border-emerald/40 px-7 py-3.5 text-[12px] font-medium uppercase tracking-[0.12em] text-emerald transition-colors duration-300 hover:bg-emerald/10"
             >
               {copy.ctaLabel}

@@ -46,7 +46,7 @@ export default async function ContactPage() {
           <div className="mt-8 grid grid-cols-1 gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-24">
             <div>
               <Reveal delay={0.1}>
-                <h1 className="text-balance font-display text-4xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-6xl">
+                <h1 className="text-balance font-display text-4xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-6xl">
                   {page.heading}
                 </h1>
               </Reveal>
@@ -73,7 +73,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={settings.phoneHref}
-                      className="inline-flex min-h-11 items-center font-display text-2xl font-light text-ink transition-colors hover:text-champagne"
+                      className="inline-flex min-h-11 items-center font-display text-2xl text-ink transition-colors hover:text-champagne"
                     >
                       {settings.phone}
                     </a>
@@ -82,7 +82,7 @@ export default async function ContactPage() {
                   <li>
                     <a
                       href={`mailto:${settings.email}`}
-                      className="inline-flex min-h-11 items-center font-display text-xl font-light text-ink transition-colors [overflow-wrap:anywhere] hover:text-champagne sm:text-2xl"
+                      className="inline-flex min-h-11 items-center font-display text-xl text-ink transition-colors [overflow-wrap:anywhere] hover:text-champagne sm:text-2xl"
                     >
                       {settings.email}
                     </a>

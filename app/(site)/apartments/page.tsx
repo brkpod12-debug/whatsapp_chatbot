@@ -68,7 +68,7 @@ export default async function ApartmentsPage() {
           </Reveal>
           <div>
             <Reveal>
-              <h2 className="text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-6xl">
+              <h2 className="text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-6xl">
                 {page.outlookHeading}
               </h2>
             </Reveal>

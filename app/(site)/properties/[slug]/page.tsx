@@ -132,7 +132,14 @@ export default async function PropertyPage({ params }: PageProps) {
     imageNote: undefined,
     photosLabel: "Photographs",
     photosNote: "On request from the Private Advisory",
-    ...(pageCopy ?? {}),
+    // Sanity returns "" for a field an editor cleared rather than deleted, and
+    // a plain spread lets that empty string beat the default, blanking the
+    // label on every property page. Only non-empty values override.
+    ...Object.fromEntries(
+      Object.entries(pageCopy ?? {}).filter(
+        ([, value]) => !(typeof value === "string" && value.trim() === "")
+      )
+    ),
   };
 
   const embedSrc = getYouTubeEmbedUrl(property.youtubeUrl);
@@ -186,7 +193,7 @@ export default async function PropertyPage({ params }: PageProps) {
                   Folio {property.folio}
                 </span>
               </div>
-              <p className="mt-3 font-display text-4xl font-light text-paper lg:text-5xl">{property.price}</p>
+              <p className="mt-3 font-display text-4xl text-paper lg:text-5xl">{property.price}</p>
               <p className="mt-1 text-right font-mono text-[12px] uppercase tracking-[0.2em] text-paper/60">
                 {[property.beds, property.area].filter(Boolean).join(" · ")}
               </p>
@@ -203,7 +210,7 @@ export default async function PropertyPage({ params }: PageProps) {
                 <ChapterMarker kicker={copy.walkthroughKicker} />
               </Reveal>
               <RevealMask delay={0.1}>
-                <h2 className="mt-6 max-w-[20ch] text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
+                <h2 className="mt-6 max-w-[20ch] text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
                   {copy.walkthroughHeading}
                 </h2>
               </RevealMask>
@@ -250,7 +257,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <ChapterMarker kicker={copy.videoKicker} />
             </Reveal>
             <RevealMask delay={0.1}>
-              <h2 className="mt-6 text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
+              <h2 className="mt-6 text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
                 {copy.videoHeading}
               </h2>
             </RevealMask>
@@ -276,7 +283,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <ChapterMarker kicker={copy.storyKicker} />
             </Reveal>
             <RevealMask delay={0.1}>
-              <h2 className="mt-6 text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
+              <h2 className="mt-6 text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
                 {copy.storyHeading}
               </h2>
             </RevealMask>
@@ -292,7 +299,7 @@ export default async function PropertyPage({ params }: PageProps) {
               <Reveal delay={0.2} className="mt-10">
                 <div className="border-t border-ink/15 pt-8">
                   <p className="eyebrow text-slate">{copy.factsOriginLabel}</p>
-                  <p className="mt-3 font-display text-2xl font-light text-ink">
+                  <p className="mt-3 font-display text-2xl text-ink">
                     {property.location.trim()}
                   </p>
                   <p className="mt-3 max-w-[56ch] text-[15px] leading-relaxed text-ink/60">
@@ -322,7 +329,7 @@ export default async function PropertyPage({ params }: PageProps) {
                         className="flex items-baseline justify-between gap-6 py-4 transition-colors duration-300 hover:bg-mist/50"
                       >
                         <dt className="text-[13px] uppercase tracking-[0.12em] text-ink/60">{s.label}</dt>
-                        <dd className="text-right font-display text-lg font-light text-ink">{s.value}</dd>
+                        <dd className="text-right font-display text-lg text-ink">{s.value}</dd>
                       </div>
                     ))}
                   </dl>
@@ -340,7 +347,6 @@ export default async function PropertyPage({ params }: PageProps) {
                       <Button
                         href="/contact"
                         variant="filled"
-                        data-cursor="ENQUIRE"
                         className="group w-full justify-center"
                       >
                         {copy.enquireLabel}
@@ -374,7 +380,7 @@ export default async function PropertyPage({ params }: PageProps) {
                   <ChapterMarker kicker={copy.groundHeading} />
                 </Reveal>
                 <RevealMask delay={0.1}>
-                  <h2 className="mt-6 text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
+                  <h2 className="mt-6 text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
                     {copy.alsoHeading}
                   </h2>
                 </RevealMask>

@@ -12,7 +12,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
       />
       {/* Large magazine wordmark */}
       <div aria-hidden className="pointer-events-none relative select-none">
-        <p aria-hidden className="px-6 text-center font-display text-[clamp(5rem,17vw,15rem)] font-light leading-[0.8] tracking-[0.1em] text-paper/[0.045]">
+        <p aria-hidden className="px-6 text-center font-display text-[clamp(5rem,17vw,15rem)] leading-[0.8] tracking-[0.1em] text-paper/[0.045]">
           JOSH
         </p>
       </div>
@@ -30,7 +30,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             </div>
             <div>
               <p className="stamp text-slate">RERA number</p>
-              <p className="mt-3 font-display text-2xl font-light text-paper">
+              <p className="mt-3 font-display text-2xl text-paper">
                 {settings.rera.number}
               </p>
             </div>

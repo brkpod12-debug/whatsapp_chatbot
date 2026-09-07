@@ -43,9 +43,9 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
 
               <div className="relative px-7 py-10 sm:px-10">
                 {/* Resting watermark: one revolution a minute, never a focal point */}
-                <Seal className="animate-seal-turn pointer-events-none absolute -right-5 -top-5 h-44 w-44 text-emerald/[0.07]" />
+                <Seal className="pointer-events-none absolute -right-5 -top-5 h-44 w-44 text-emerald/[0.07]" />
                 <RevealMask>
-                  <h2 className="font-display text-4xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-5xl">
+                  <h2 className="font-display text-4xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-5xl">
                     {copy.headingPlain}
                     <br />
                     <em className="italic text-champagne">{copy.headingItalic}</em>
@@ -53,7 +53,7 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
                 </RevealMask>
 
                 <Reveal delay={0.15}>
-                  <p className="mt-8 max-w-[34ch] font-display text-2xl font-light italic leading-snug text-ink/80">
+                  <p className="mt-8 max-w-[34ch] font-display text-2xl italic leading-snug text-ink/80">
                     {copy.pullQuote}
                   </p>
                 </Reveal>
@@ -69,7 +69,7 @@ export function Story({ copy }: { copy: HomePage["story"] }) {
                 <Reveal delay={0.45}>
                   <div className="mt-12 flex items-center justify-between gap-6 border-t border-ink/15 pt-8">
                     <div className="flex items-baseline gap-4">
-                      <p className="font-display text-3xl font-light tracking-[0.18em]">
+                      <p className="font-display text-3xl tracking-[0.18em]">
                         {copy.signoffName}
                       </p>
                       <p className="font-display text-sm italic text-slate">

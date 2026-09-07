@@ -38,7 +38,7 @@ export function PageTransition() {
           </span>
           <span className="flex items-center gap-4">
             <span aria-hidden className="h-px w-10 bg-brass/60" />
-            <span className="font-display text-4xl font-light tracking-[0.14em] text-ink">
+            <span className="font-display text-4xl tracking-[0.14em] text-ink">
               JOSH
             </span>
             <span aria-hidden className="h-px w-10 bg-brass/60" />

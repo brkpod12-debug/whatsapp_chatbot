@@ -38,7 +38,7 @@ The live register currently holds apartments only, at Pragathi Nagar and Nizampe
   - `app/(studio)/studio/[[...tool]]/` — `page.tsx` (`dynamic = "force-static"`) + `StudioClient.tsx` (mounts `NextStudio`)
 - `components/sections/` — one component per landing/page section (incl. `PageHero`); `components/CinematicHero.tsx` is the scroll-scrubbed homepage hero
 - `components/ui/` — reusable primitives: `Button`, `MagneticButton`, `ChapterMarker`
-- `components/motion/` — animation primitives: `Reveal`, `RevealMask`, `MaskLines`, `Parallax`, `CountUp`, `ScrollProgress`, `SmoothScroll`, `PageTransition`
+- `components/motion/` — animation primitives: `Reveal`, `RevealMask`, `Parallax`, `CountUp`, `ScrollProgress`, `SmoothScroll`, `PageTransition`, `CurtainReveal`, `FolioWipe`, `SlowZoom`, `CounterRotate`, `RegistryRule`, `SealLoader`, `StampSeal`
 - `components/` (page-level) — `CinematicHero` (scroll-scrubbed hero film), `PropertyCard`, `PropertyListing`, `Gallery`, `FarmlandMap`, `DayNightCity`, `DossierForm`, `FloatingCta`
 - `sanity/` — Sanity CMS integration: `client.ts` (read `client` + token-authenticated `writeClient`, server-only), `env.ts`, `image.ts` (`urlFor()`), `queries.ts` (typed GROQ fetchers, one per content type), `schemaTypes/` (document schemas), `structure.ts` (Studio desk structure, pins the singletons). `sanity.config.ts` at the repo root wires it all together for `/studio`.
 - `lib/utils.ts` — `cn()` class merger
@@ -58,7 +58,8 @@ The live register currently holds apartments only, at Pragathi Nagar and Nizampe
 
 - Import from `motion/react`. Use `useReducedMotion()` in every animated component and disable/degrade motion when true.
 - Standard ease curve: `[0.16, 1, 0.3, 1]`. Durations ~0.5–1s; springs for pointer-reactive motion (MagneticButton).
-- Reuse the primitives in `components/motion/` (e.g. `Reveal`, `RevealMask`, `MaskLines`) before writing bespoke animations.
+- Reuse the primitives in `components/motion/` (e.g. `Reveal`, `RevealMask`, `Parallax`) before writing bespoke animations.
+- **Motion must be motivated:** hierarchy, storytelling, feedback or state change. Decorative infinite loops are not kept. The seal watermark rests, and the `.wax-border` sweep answers hover rather than running forever.
 - `SmoothScroll` (Lenis), `ScrollProgress`, and `PageTransition` mount once in the root layout; all self-disable or degrade under reduced motion / coarse pointers.
 - **Magnetic buttons:** `MagneticButton` wraps `Button` for a subtle pointer-follow on CTAs. No custom cursor.
 - **Page transitions:** `Button` renders `next/link` for internal paths (starts with `/`, not `#` or `http`), enabling client-side nav with the `PageTransition` curtain. Keep cross-page links internal so there are no white flashes.
@@ -68,7 +69,9 @@ The live register currently holds apartments only, at Pragathi Nagar and Nizampe
 
 The site speaks a **Title Register Book** language: warm linen paper and ink, a deep **forest** green for dark chapters, and **brass** as the single accent. Every surface should read as an artifact of a private land registry — a folio, a ledger, a deed, a stamp — not as a generic marketing page.
 
-- **Colors are Tailwind theme tokens in `app/globals.css`:** `paper #faf8f3`, `stone #f2efe8`, `mist #ece6db`, `slate #8d8981`, `ink #0a0a09`, `graphite #191815`, `carbon #11110f` (warm black), `chrome #cbc5b9`, `sage #b9b2a3` (clay), `emerald #c1a36d` (the champagne-brass accent), `pine #7b6746` (bronze hover/dark). Brass aliases: `brass`, `champagne #a88a5a`, `bronze`, `forest`, `clay`, `line`, `paper-dark`. **`emerald`/`pine`/`carbon`/`sage` still mean brass/bronze/warm-black/clay respectively — `emerald` IS the brass accent.** Champagne is the darker text-grade accent (`#a88a5a`); use it for accent text, `emerald` for fills. Use tokens, not raw hex. Plan-named variables (`--paper`, `--ink`, `--forest`, `--brass`, `--champagne`, `--bronze`, `--clay`, `--line`, `--text-hero`, `--text-h2`, `--text-label`) are also defined in `:root`.
+- **Colors are Tailwind theme tokens in `app/globals.css`:** `paper #faf8f3`, `stone #f2efe8`, `mist #ece6db`, `slate #6b6760`, `ink #0a0a09`, `graphite #191815`, `carbon #11110f` (warm black), `chrome #cbc5b9`, `sage #b9b2a3` (clay), `emerald #c1a36d` (the champagne-brass accent), `pine #7b6746` (bronze hover/dark). Brass aliases: `brass`, `champagne #775f34`, `bronze`, `forest`, `clay`, `line`, `paper-dark`. **`emerald`/`pine`/`carbon`/`sage` still mean brass/bronze/warm-black/clay respectively — `emerald` IS the brass accent.** Champagne is the darker text-grade accent (`#775f34`, 5.7:1 on paper); use it for accent text, `emerald` for fills. Use tokens, not raw hex. `:root` holds only the three custom properties actually consumed by CSS: `--brass`, `--gold-glow`, `--wax-red`. The rest were unreferenced aliases and have been removed; do not reintroduce a parallel palette.
+- **Never redeclare a next/font variable in `:root`.** `@theme inline` already exposes `--font-display`/`--font-body`/`--font-mono` as Tailwind utilities, and `next/font` supplies their values via a class on `<html>`. Writing `--font-display: var(--font-display)` inside `:root` is a self-reference that computes to empty and silently drops the family: for a long time this made the whole site render in Sora, with Instrument Serif and IBM Plex Mono never loading at all.
+- **Display type is weight 400 only.** Instrument Serif ships no 300, so `font-light` on a `font-display` element asks the browser to synthesise a faux-light and thins the serif. Never pair the two.
 - **Fonts load via `next/font` in `app/fonts.ts`:** `Instrument Serif` (display — weight 400 only, normal + italic), `Sora` (body — 300–600), `IBM Plex Mono` (mono/registry metadata). Exposed as `font-display`, `font-body`, `font-mono`.
 - **Registry devices (reuse, don't re-invent):**
   - `components/ui/Seal.tsx` — circular JP monogram seal ("Josh Properties · Private Advisory"). Use as watermark (large, `text-paper/[0.07]` on dark, `text-emerald/[0.07]` on paper) or as a small brand mark.
@@ -80,7 +83,7 @@ The site speaks a **Title Register Book** language: warm linen paper and ink, a 
 - **Voice notes:** `Testimonials` renders clients as WhatsApp-style voice notes — brass play/pause toggles a `.animate-wave` on the waveform bars. No blockquote styling.
 - **Copy discipline (anti-slop):** NO em-dashes (use commas/colons/periods; en-dashes only in numeric ranges like `₹1–3 Cr`). No "Khammam", "Victory Atelier", "coordination charges" (except the deliberate FAQ line), no eyebrow on every section.
 - **Eyebrow restraint:** max ~1 eyebrow per 3 sections. Home page currently uses three: hero kicker, "The collection" (Featured), "The farmland" (FarmlandBand). Don't add more.
-- **Shape lock:** all-sharp system (radius 0–2px). No rounded cards; the only circles are the Seal and voice-note play buttons. Timelines use sharp index squares, not circles.
+- **Shape lock:** all-sharp system (radius 0–2px). No rounded cards; the circles are the Seal, the voice-note play buttons, the FloatingCta pair, the form success marks and the Offerings advisory arrow. Timelines use sharp index squares, not circles.
 - **Respect `prefers-reduced-motion` global CSS and the marquee fallback.**
 - **Dark/light arc:** dark opening (Hero/Stats), long light "documents" chapter (Featured→WhyJosh), dark chapters (FarmlandBand, Method/Process, FinalCta), light close. Keep this triptych; don't scatter dark sections through the light chapter.
 

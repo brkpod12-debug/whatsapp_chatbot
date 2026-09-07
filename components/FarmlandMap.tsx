@@ -4,9 +4,9 @@ import { useState } from "react";
 import type { MasterplanData } from "@/sanity/queries";
 
 const statusStyles: Record<string, { fill: string; stroke: string }> = {
-  Available: { fill: "rgba(197,162,107,0.32)", stroke: "#c5a26b" },
-  Reserved: { fill: "rgba(122,114,99,0.3)", stroke: "#7a7263" },
-  Sold: { fill: "rgba(14,14,11,0.22)", stroke: "#0e0e0b" },
+  Available: { fill: "rgba(193,163,109,0.32)", stroke: "#c1a36d" },
+  Reserved: { fill: "rgba(132,125,111,0.3)", stroke: "#847d6f" },
+  Sold: { fill: "rgba(17,17,15,0.22)", stroke: "#11110f" },
 };
 
 export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
@@ -36,7 +36,7 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
             width="96"
             height="96"
             fill="rgba(248,245,240,0.7)"
-            stroke="rgba(122,114,99,0.5)"
+            stroke="rgba(132,125,111,0.5)"
             strokeWidth="0.15"
           />
           <line
@@ -44,7 +44,7 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
             y1="90"
             x2="96"
             y2="90"
-            stroke="rgba(122,114,99,0.4)"
+            stroke="rgba(132,125,111,0.4)"
             strokeWidth="0.2"
             strokeDasharray="2 0.7"
           />
@@ -52,7 +52,7 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
             <path
               d="M0 88 C 25 72, 40 92, 60 80 S 90 62, 100 68"
               fill="none"
-              stroke="rgba(122,114,99,0.6)"
+              stroke="rgba(132,125,111,0.6)"
               strokeWidth="1.3"
               strokeDasharray="1 0.8"
             />
@@ -65,7 +65,8 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
                 key={p.id}
                 role="button"
                 tabIndex={0}
-                aria-pressed={isActive}
+                aria-pressed={isActive}
+                aria-label={`Plot ${p.id}, ${p.size}, phase ${p.phase}, ${p.status}`}
                 onClick={() => setActive(isActive ? null : p.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -84,19 +85,19 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
                   height="22"
                   rx="0.4"
                   fill={s.fill}
-                  stroke={isActive ? "#1a1a1a" : s.stroke}
+                  stroke={isActive ? "#191815" : s.stroke}
                   strokeWidth={isActive ? 0.5 : 0.18}
                   style={{ transition: "fill 0.2s ease, stroke 0.2s ease" }}
-                  className="group-focus-visible:stroke-[#1a1a1a] group-focus-visible:stroke-[0.5]"
+                  className="group-focus-visible:stroke-[#191815] group-focus-visible:stroke-[0.5]"
                 />
                 <text
                   x={p.x + 10}
                   y={p.y + 12.5}
                   textAnchor="middle"
                   fontSize="3.2"
-                  fill={isActive ? "#1a1a1a" : "#7a7263"}
-                  fontFamily="JetBrains Mono, monospace"
-                  className="transition-colors duration-200 group-focus-visible:fill-[#1a1a1a]"
+                  fill={isActive ? "#191815" : "#847d6f"}
+                  fontFamily="var(--font-mono)"
+                  className="transition-colors duration-200 group-focus-visible:fill-[#191815]"
                 >
                   {p.id}
                 </text>
@@ -111,7 +112,7 @@ export function FarmlandMap({ masterplan }: { masterplan: MasterplanData }) {
             <dl className="mt-4 space-y-3 text-[14px]">
               <div className="flex items-baseline justify-between gap-4">
                 <dt className="text-ink/50">Plot</dt>
-                <dd className="font-display text-3xl font-light text-ink">
+                <dd className="font-display text-3xl text-ink">
                   {selected.id}
                 </dd>
               </div>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = studioViewport;
 
-// Deliberately bare: no site chrome (Lenis smooth-scroll, PremiumCursor,
+// Deliberately bare: no site chrome (Lenis smooth-scroll,
 // PageTransition curtain, film-grain overlay, fixed Navbar/FloatingCta).
 // Sanity Studio is a full SPA with its own nested scroll panes and fixed
 // toolbar; the site's chrome would fight it (Lenis stealing wheel events

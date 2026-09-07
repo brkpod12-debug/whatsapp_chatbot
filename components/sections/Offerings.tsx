@@ -36,7 +36,7 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
     <section className="bg-paper">
       <div className="mx-auto max-w-[1440px] px-6 py-28 sm:px-12 lg:px-20 lg:py-40">
         <RevealMask>
-          <h2 className="max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+          <h2 className="max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
             {copy.heading}
           </h2>
         </RevealMask>
@@ -51,17 +51,16 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
             <Reveal key={s.slug} delay={i * 0.06}>
               <Link
                 href={s.href}
-                data-cursor="VIEW"
                 className="group grid grid-cols-1 gap-8 border-b border-ink/15 py-10 transition-opacity duration-500 md:grid-cols-[auto_1fr_240px] md:items-center md:gap-10 lg:py-12"
               >
                 <CounterRotate
                   direction={i % 2 === 0 ? 1 : -1}
-                  className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald"
+                  className="font-display text-2xl italic text-slate transition-colors duration-300 group-hover:text-emerald"
                 >
                   {s.numeral}
                 </CounterRotate>
                 <div>
-                  <h3 className="relative inline-block font-display text-3xl font-light text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
+                  <h3 className="relative inline-block font-display text-3xl text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
                     {s.name}
                     <span
                       aria-hidden
@@ -77,7 +76,7 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
                     src={localImages[s.href] ?? `https://picsum.photos/seed/${seeds[s.href]}/480/360`}
                     alt={s.name}
                     fill
-                    sizes="240px"
+                    sizes="(max-width: 767px) 100vw, 240px"
                     className={`object-cover ${hoverClass[s.href] ?? ""}`}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-carbon/55 via-transparent to-transparent" />
@@ -90,17 +89,16 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
             <Reveal delay={0.1}>
               <Link
                 href={advisory.href}
-                data-cursor="ENQUIRE"
                 className="wax-border group flex items-center justify-between gap-6 px-6 py-10 transition-opacity duration-500 lg:py-12"
               >
                 <div>
                   <CounterRotate
                     direction={-1}
-                    className="font-display text-2xl font-light italic text-slate transition-colors duration-300 group-hover:text-emerald"
+                    className="font-display text-2xl italic text-slate transition-colors duration-300 group-hover:text-emerald"
                   >
                     {advisory.numeral}
                   </CounterRotate>
-                  <h3 className="mt-3 font-display text-3xl font-light text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
+                  <h3 className="mt-3 font-display text-3xl text-ink transition-colors duration-300 group-hover:text-emerald lg:text-4xl">
                     {advisory.name}
                   </h3>
                   <p className="mt-3 max-w-[60ch] text-pretty text-[15px] leading-relaxed text-ink/60">

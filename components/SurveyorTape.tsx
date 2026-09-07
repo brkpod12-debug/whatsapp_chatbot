@@ -2,13 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
 import type { HomePage } from "@/sanity/queries";
 import { urlFor } from "@/sanity/image";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Ground = HomePage["farmlandBand"]["grounds"][number];
 
@@ -30,114 +26,132 @@ export function SurveyorTape({ grounds }: { grounds: Ground[] }) {
   const root = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
+  // GSAP is ~70 KB. Fetch it when the effect runs rather than shipping it on
+  // the homepage's critical path (this section renders above Process, which
+  // already defers it the same way).
   useEffect(() => {
     const el = root.current;
     if (!el || reduce) return;
 
-    const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
+    let ctx: { revert: () => void } | undefined;
+    let cancelled = false;
 
-      // Desktop/tablet only. Touch keeps the native swipe track below, which
-      // is a better interaction than a hijacked vertical scroll on a phone.
-      mm.add("(min-width: 769px)", () => {
-        const track = el.querySelector<HTMLElement>("[data-tape-track]");
-        const pin = el.querySelector<HTMLElement>("[data-tape-pin]");
-        if (!track || !pin) return;
+    void (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-        const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      ctx = gsap.context(() => {
+        const mm = gsap.matchMedia();
 
-        // Overall progress drives the ruler fill and the mini-map marker.
-        // These must be wired in the config: ScrollTrigger reads its vars at
-        // creation, so assigning .vars.onUpdate afterwards never fires.
-        const ruler = el.querySelector<HTMLElement>("[data-tape-ruler]");
-        const marker = el.querySelector<HTMLElement>("[data-tape-marker]");
+        // Desktop/tablet only. Touch keeps the native swipe track below, which
+        // is a better interaction than a hijacked vertical scroll on a phone.
+        mm.add("(min-width: 769px)", () => {
+          const track = el.querySelector<HTMLElement>("[data-tape-track]");
+          const pin = el.querySelector<HTMLElement>("[data-tape-pin]");
+          if (!track || !pin) return;
 
-        const drive = gsap.to(track, {
-          x: () => -distance(),
-          ease: "none",
-          scrollTrigger: {
-            trigger: pin,
-            start: "top top",
-            end: () => `+=${distance()}`,
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              if (ruler) ruler.style.transform = `scaleX(${self.progress})`;
-              if (marker) marker.style.left = `${self.progress * 100}%`;
+          const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+          // Overall progress drives the ruler fill and the mini-map marker.
+          // These must be wired in the config: ScrollTrigger reads its vars at
+          // creation, so assigning .vars.onUpdate afterwards never fires.
+          const ruler = el.querySelector<HTMLElement>("[data-tape-ruler]");
+          const marker = el.querySelector<HTMLElement>("[data-tape-marker]");
+
+          const drive = gsap.to(track, {
+            x: () => -distance(),
+            ease: "none",
+            scrollTrigger: {
+              trigger: pin,
+              start: "top top",
+              end: () => `+=${distance()}`,
+              scrub: 1,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                if (ruler) ruler.style.transform = `scaleX(${self.progress})`;
+                if (marker) marker.style.left = `${self.progress * 100}%`;
+              },
             },
-          },
-        });
+          });
 
-        // Per-card effects ride the horizontal tween via containerAnimation.
-        gsap.utils.toArray<HTMLElement>("[data-tape-card]").forEach((card, i) => {
-          const img = card.querySelector<HTMLElement>("[data-tape-img]");
-          const path = card.querySelector<SVGPathElement>("[data-tape-path]");
-          const name = card.querySelector<HTMLElement>("[data-tape-name]");
-          const counter = el.querySelector<HTMLElement>("[data-tape-count]");
+          // Per-card effects ride the horizontal tween via containerAnimation.
+          gsap.utils.toArray<HTMLElement>("[data-tape-card]").forEach((card, i) => {
+            const img = card.querySelector<HTMLElement>("[data-tape-img]");
+            const path = card.querySelector<SVGPathElement>("[data-tape-path]");
+            const name = card.querySelector<HTMLElement>("[data-tape-name]");
+            const counter = el.querySelector<HTMLElement>("[data-tape-count]");
 
-          // Saturation ramps as the card crosses the centre of the frame,
-          // scrubbed by position rather than fired once.
-          if (img) {
+            // Saturation ramps as the card crosses the centre of the frame,
+            // scrubbed by position rather than fired once.
+            if (img) {
+              ScrollTrigger.create({
+                trigger: card,
+                containerAnimation: drive,
+                start: "left 85%",
+                end: "center 55%",
+                scrub: true,
+                onUpdate: (self) => {
+                  img.style.filter = `grayscale(${1 - self.progress}) brightness(${0.9 + self.progress * 0.1})`;
+                },
+              });
+            }
+
             ScrollTrigger.create({
               trigger: card,
               containerAnimation: drive,
-              start: "left 85%",
-              end: "center 55%",
-              scrub: true,
-              onUpdate: (self) => {
-                img.style.filter = `grayscale(${1 - self.progress}) brightness(${0.9 + self.progress * 0.1})`;
+              start: "left 70%",
+              end: "right 30%",
+              onToggle: (self) => {
+                if (!self.isActive) return;
+                card.setAttribute("data-active", "true");
+                if (counter) counter.textContent = String(i + 1).padStart(2, "0");
               },
+              onLeave: () => card.removeAttribute("data-active"),
+              onLeaveBack: () => card.removeAttribute("data-active"),
             });
-          }
 
-          ScrollTrigger.create({
-            trigger: card,
-            containerAnimation: drive,
-            start: "left 70%",
-            end: "right 30%",
-            onToggle: (self) => {
-              if (!self.isActive) return;
-              card.setAttribute("data-active", "true");
-              if (counter) counter.textContent = String(i + 1).padStart(2, "0");
-            },
-            onLeave: () => card.removeAttribute("data-active"),
-            onLeaveBack: () => card.removeAttribute("data-active"),
+            if (path) {
+              gsap.fromTo(
+                path,
+                { strokeDashoffset: 1 },
+                {
+                  strokeDashoffset: 0,
+                  duration: 1.6,
+                  ease: "power2.out",
+                  scrollTrigger: { trigger: card, containerAnimation: drive, start: "left 65%", once: true },
+                }
+              );
+            }
+
+            if (name) {
+              gsap.fromTo(
+                name.children,
+                { yPercent: 110, opacity: 0 },
+                {
+                  yPercent: 0,
+                  opacity: 1,
+                  duration: 0.7,
+                  ease: "power3.out",
+                  stagger: 0.03,
+                  scrollTrigger: { trigger: card, containerAnimation: drive, start: "left 70%", once: true },
+                }
+              );
+            }
           });
-
-          if (path) {
-            gsap.fromTo(
-              path,
-              { strokeDashoffset: 1 },
-              {
-                strokeDashoffset: 0,
-                duration: 1.6,
-                ease: "power2.out",
-                scrollTrigger: { trigger: card, containerAnimation: drive, start: "left 65%", once: true },
-              }
-            );
-          }
-
-          if (name) {
-            gsap.fromTo(
-              name.children,
-              { yPercent: 110, opacity: 0 },
-              {
-                yPercent: 0,
-                opacity: 1,
-                duration: 0.7,
-                ease: "power3.out",
-                stagger: 0.03,
-                scrollTrigger: { trigger: card, containerAnimation: drive, start: "left 70%", once: true },
-              }
-            );
-          }
         });
-      });
-    }, el);
+      }, el);
+    })();
 
-    return () => ctx.revert();
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, [reduce]);
 
   return (
@@ -198,7 +212,7 @@ export function SurveyorTape({ grounds }: { grounds: Ground[] }) {
 
               <h3
                 data-tape-name
-                className="mt-5 flex overflow-hidden font-display text-2xl font-light text-paper md:text-4xl"
+                className="mt-5 flex overflow-hidden font-display text-2xl text-paper md:text-4xl"
               >
                 {[...g.name.trim()].map((ch, c) => (
                   <span key={`${ch}-${c}`} className="inline-block whitespace-pre">

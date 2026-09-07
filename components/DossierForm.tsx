@@ -82,7 +82,7 @@ export function DossierForm({
 
   // text-base (16px) keeps iOS Safari from auto-zooming into the field.
   const inputClass =
-    "w-full bg-transparent py-3 text-base text-ink placeholder:text-ink/60 focus:outline-none";
+    "w-full bg-transparent py-3 text-base text-ink placeholder:text-ink/60";
 
   if (sent) {
     return (
@@ -95,7 +95,7 @@ export function DossierForm({
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald/15 text-emerald">
           <Check size={20} strokeWidth={1.5} />
         </span>
-        <h2 className="mt-6 font-display text-3xl font-light text-ink">
+        <h2 className="mt-6 font-display text-3xl text-ink">
           Dossier requested.
         </h2>
         <p className="mt-3 max-w-[42ch] text-pretty text-[15px] leading-relaxed text-ink/65">

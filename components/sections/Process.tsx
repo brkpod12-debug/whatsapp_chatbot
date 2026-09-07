@@ -95,7 +95,7 @@ export function Process({ steps, copy }: { steps: ProcessStep[]; copy: HomePage[
                 </p>
               </Reveal>
               <RevealMask delay={0.1}>
-                <h2 className="mt-8 text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] lg:text-6xl">
+                <h2 className="mt-8 text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] lg:text-6xl">
                   {copy.heading}
                 </h2>
               </RevealMask>

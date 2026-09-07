@@ -58,7 +58,7 @@ export default async function FarmlandsPage() {
         <div className="mx-auto max-w-[1440px] px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
           <Reveal><ChapterMarker kicker={page.masterplanKicker ?? ""} /></Reveal>
           <RevealMask delay={0.1}>
-            <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+            <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
               {page.masterplanHeading}
             </h2>
           </RevealMask>
@@ -81,7 +81,7 @@ export default async function FarmlandsPage() {
             <div>
               <Reveal><ChapterMarker kicker={page.holdingsKicker ?? ""} /></Reveal>
               <RevealMask delay={0.1}>
-                <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+                <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
                   {page.holdingsHeading}
                 </h2>
               </RevealMask>
@@ -106,7 +106,7 @@ export default async function FarmlandsPage() {
                   </div>
                   <div className="p-7">
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-display text-2xl font-light text-ink lg:text-3xl">{o.name}</h3>
+                      <h3 className="font-display text-2xl text-ink lg:text-3xl">{o.name}</h3>
                       <span className={o.status === "Available" ? "eyebrow text-champagne" : "eyebrow text-ink/60"}>
                         {o.status}
                       </span>
@@ -129,7 +129,7 @@ export default async function FarmlandsPage() {
           <div>
             <Reveal><ChapterMarker kicker={page.dossierKicker ?? ""} /></Reveal>
             <RevealMask delay={0.1}>
-              <h2 className="mt-8 text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-6xl">
+              <h2 className="mt-8 text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-6xl">
                 {page.dossierHeading}
               </h2>
             </RevealMask>

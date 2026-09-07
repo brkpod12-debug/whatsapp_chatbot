@@ -9,7 +9,6 @@ import { Footer } from "@/components/sections/Footer";
 import { FloatingCta } from "@/components/FloatingCta";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
-import { PremiumCursor } from "@/components/motion/PremiumCursor";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { SealLoader } from "@/components/motion/SealLoader";
 import { Analytics } from "@/components/Analytics";
@@ -68,7 +67,6 @@ export default async function RootLayout({
         <SealLoader />
         <SmoothScroll />
         <ScrollProgress />
-        <PremiumCursor />
         <PageTransition />
         <div className="film-grain" aria-hidden />
         <Navbar settings={settings} />

@@ -37,7 +37,7 @@ export function Faq({ items, copy }: { items: FaqItem[]; copy: HomePage["faqSect
       <div className="relative mx-auto max-w-[920px] px-6 py-28 sm:px-12 lg:py-40">
         <div className="flex items-end justify-between gap-8">
           <RevealMask delay={0.1}>
-            <h2 className="text-balance font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
+            <h2 className="text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-5xl">
               {copy.heading}
             </h2>
           </RevealMask>
@@ -81,7 +81,7 @@ export function Faq({ items, copy }: { items: FaqItem[]; copy: HomePage["faqSect
                         className={
                           isOpen
                             ? "font-display text-xl font-normal text-emerald transition-colors duration-300 lg:text-2xl"
-                            : "font-display text-xl font-light text-ink transition-colors duration-300 group-hover:text-ink/70 lg:text-2xl"
+                            : "font-display text-xl text-ink transition-colors duration-300 group-hover:text-ink/70 lg:text-2xl"
                         }
                       >
                         {faq.question}

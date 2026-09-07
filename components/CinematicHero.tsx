@@ -153,7 +153,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
   const scale = useTransform(smooth, [0, 1], [1, 1.025]);
   const indicator = useTransform(smooth, [0.04, 0.1], [0, 1]);
 
-  if (reduce) return <StaticHero />;
+  if (reduce) return <StaticHero copy={copy} />;
 
   return (
     <section ref={sectionRef} className="relative h-[160vh] md:h-[220vh]">
@@ -198,7 +198,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
               style={{ opacity: hyderabadOpacity, y: hyderabadExitY }}
               className="mt-2 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
             >
-              <h1 className="hero-title font-display text-[clamp(2.8rem,9vw,7.5rem)] font-light leading-[1] text-paper">
+              <h1 className="hero-title font-display text-[clamp(2.8rem,9vw,7.5rem)] leading-[1] text-paper">
                 {copy.place}
               </h1>
             </motion.div>
@@ -215,21 +215,21 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
             <MaskedLine
               progress={smooth}
               range={[0.31, 0.37]}
-              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] font-light leading-[1.1] text-paper"
+              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[1.1] text-paper"
             >
               {copy.words[0]}
             </MaskedLine>
             <MaskedLine
               progress={smooth}
               range={[0.34, 0.4]}
-              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] font-light leading-[1.1] text-emerald"
+              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[1.1] text-emerald"
             >
               {copy.words[1]}
             </MaskedLine>
             <MaskedLine
               progress={smooth}
               range={[0.37, 0.43]}
-              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] font-light leading-[1.1] text-paper"
+              className="font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[1.1] text-paper"
             >
               {copy.words[2]}
             </MaskedLine>
@@ -246,14 +246,14 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
             <MaskedLine
               progress={smooth}
               range={[0.54, 0.6]}
-              className="font-display text-[clamp(2.6rem,7.5vw,6.5rem)] font-light leading-[1.02] text-paper"
+              className="font-display text-[clamp(2.6rem,7.5vw,6.5rem)] leading-[1.02] text-paper"
             >
               {copy.titleLine1}
             </MaskedLine>
             <MaskedLine
               progress={smooth}
               range={[0.56, 0.62]}
-              className="font-display text-[clamp(2.6rem,7.5vw,6.5rem)] font-light leading-[1.02] italic text-paper"
+              className="font-display text-[clamp(2.6rem,7.5vw,6.5rem)] leading-[1.02] italic text-paper"
             >
               {copy.titleLine2}
             </MaskedLine>
@@ -276,7 +276,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           className="pointer-events-none absolute inset-x-0 bottom-[14vh] hidden items-center justify-center md:flex"
         >
           <motion.div style={{ opacity: s4In, y: s4InY }} className="text-center">
-            <p className="font-display text-[clamp(1.6rem,3.5vw,3rem)] font-light tracking-[0.08em] text-paper">
+            <p className="font-display text-[clamp(1.6rem,3.5vw,3rem)] tracking-[0.08em] text-paper">
               {copy.brandLine}
             </p>
             <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em] text-paper/60">
@@ -308,7 +308,7 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           style={{
             opacity: dissolve,
             background:
-              "linear-gradient(to bottom, transparent 0%, rgba(242,239,232,0.2) 55%, #f2efe8 100%)",
+              "linear-gradient(to bottom, transparent 0%, rgba(242,239,232,0.2) 55%, var(--color-stone) 100%)",
           }}
         />
 
@@ -356,7 +356,7 @@ function MaskedLine({
 }
 
 /** Reduced-motion fallback: premium static poster hero, content visible. */
-function StaticHero() {
+function StaticHero({ copy }: { copy: HomePage["hero"] }) {
   return (
     <section className="relative flex min-h-[100dvh] items-center overflow-hidden bg-carbon">
       <div className="absolute inset-0">
@@ -376,18 +376,18 @@ function StaticHero() {
       <div className="relative mx-auto w-full max-w-[1440px] px-6 sm:px-12 lg:px-20">
         <div className="h-px w-[42px] bg-emerald" />
         <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
-          Private real estate advisory
+          {copy.kicker}
         </p>
-        <h1 className="mt-3 font-display text-[clamp(3rem,10vw,7.5rem)] font-light leading-[0.95] text-paper">
-          Hyderabad
+        <h1 className="mt-3 font-display text-[clamp(3rem,10vw,7.5rem)] leading-[0.95] text-paper">
+          {copy.place}
         </h1>
-        <p className="mt-6 max-w-[44ch] font-display text-2xl font-light italic leading-snug text-paper/85">
-          We sell the title. The land is a bonus.
+        <p className="mt-6 max-w-[44ch] font-display text-2xl italic leading-snug text-paper/85">
+          {copy.titleLine1} {copy.titleLine2}
         </p>
         <div className="mt-12">
           <MagneticButton href="#collection">
             <Button href="#collection" variant="filled" size="lg" className="group brass-shimmer">
-              View Collection
+              {copy.ctaLabel}
               <ArrowRight
                 size={16}
                 strokeWidth={1.5}

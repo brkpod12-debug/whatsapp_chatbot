@@ -87,7 +87,7 @@ function VoiceNote({
           </div>
           <blockquote
             className={cn(
-              "mt-4 text-balance font-display font-light italic leading-[1.3] text-ink",
+              "mt-4 text-balance font-display italic leading-[1.3] text-ink",
               big ? "text-3xl lg:text-[2.4rem]" : "text-xl"
             )}
           >
@@ -112,7 +112,9 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
   return (
     <section className="bg-paper">
       <div className="mx-auto max-w-[1440px] px-6 py-28 sm:px-12 lg:px-20 lg:py-40">
-        <div className="mx-auto max-w-[820px]">
+        {/* The lead note sits off-centre, so the section does not open on the
+            same centred block as the Q&A that follows it. */}
+        <div className="max-w-[860px] lg:ml-[6%]">
           <VoiceNote
             quote={featured.quote}
             name={featured.name}
@@ -121,15 +123,19 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
           />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+        {/* Two staggered columns rather than three equal ones: the offset is
+            what keeps this from reading as a row of identical cards, and it
+            holds up at any number of notes the register carries. */}
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-10 lg:mt-20 lg:gap-x-16">
           {rest.map((t, i) => (
-            <VoiceNote
-              key={t.name}
-              quote={t.quote}
-              name={t.name}
-              context={t.context}
-              delay={i * 0.08}
-            />
+            <div key={t.name} className={cn(i % 2 === 1 && "md:mt-16 lg:mt-24")}>
+              <VoiceNote
+                quote={t.quote}
+                name={t.name}
+                context={t.context}
+                delay={i * 0.08}
+              />
+            </div>
           ))}
         </div>
       </div>

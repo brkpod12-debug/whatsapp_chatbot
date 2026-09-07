@@ -62,9 +62,8 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
   return (
     <Link
       href={`/properties/${property.slug}`}
-      data-cursor="VIEW"
       className={cn(
-        "group block transition-transform duration-300 ease-out active:scale-[0.985]",
+        "folio-item group block transition-transform duration-300 ease-out active:scale-[0.985]",
         className
       )}
     >
@@ -79,7 +78,7 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
               src={src}
               alt={`${property.title} - ${property.area}, ${property.location}`}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes={large ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 60vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
               className={cn("object-cover", imageHover[property.category])}
             />
           </CurtainReveal>
@@ -146,7 +145,7 @@ export function PropertyCard({ property, large, className }: PropertyCardProps) 
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.45, delay: 0.66, ease }}
-            className="mt-2 font-display text-3xl font-light text-paper transition-transform duration-300 ease-out group-hover:translate-x-[5px]"
+            className="mt-2 font-display text-3xl text-paper transition-transform duration-300 ease-out group-hover:translate-x-[5px]"
           >
             {property.title}
           </motion.h3>

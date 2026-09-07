@@ -105,7 +105,6 @@ export function Gallery({ images, className }: GalleryProps) {
           <figure
             key={i}
             data-gallery-index={i}
-            data-cursor="VIEW"
             className="group relative aspect-[4/3] w-[82vw] shrink-0 cursor-zoom-in snap-start overflow-hidden rounded-[2px] sm:w-[60vw] lg:w-[42vw]"
           >
             <Image
