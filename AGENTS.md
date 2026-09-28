@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Josh Properties
 
-Marketing site for **Josh Properties**, a luxury real-estate house in Hyderabad, Telangana — villas, apartments and farmland. Curated listings, an interactive farmland masterplan, and a dossier-gated concierge contact flow. No backend.
+Marketing site for **Josh Properties**, a luxury real-estate house in Hyderabad, Telangana — villas, apartments and farmland. Curated listings, an interactive farmland masterplan, and a dossier-gated concierge contact flow. Plus **the desk** at `/desk`: a WhatsApp AI concierge and owner CRM on Supabase. The public site still has no backend; the desk is entirely separate from it.
 
 The live register currently holds apartments only, at Pragathi Nagar and Nizampet, so `/villas` and `/farmlands` render `PropertyListing`'s empty state until stock is added in Studio.
 
@@ -24,7 +24,8 @@ The live register currently holds apartments only, at Pragathi Nagar and Nizampe
 - `npm run dev` — dev server
 - `npm run build` / `npm run start` — production
 - `npm run lint` — ESLint (strict: `react-hooks/set-state-in-effect` and `react-hooks/refs` errors are on)
-- `npm run test` — vitest suite (currently covers `app/api/revalidate/route.test.ts`)
+- `npm run test` — vitest suite (107 tests: the revalidate route, price/area parsers, webhook signature and payload parsing, the guardrail, lead scoring, CSV export, the knowledge-file parser, and the desk's policy boundaries)
+- `npm run seed:knowledge` — loads `knowledge/*.md` into `knowledge_entries`
 
 ## Architecture
 
@@ -53,6 +54,54 @@ The live register currently holds apartments only, at Pragathi Nagar and Nizampe
 - Images are `picsum.photos` placeholders keyed by a `seed` string (e.g. `josh-park`), allowlisted in `next.config.ts`. Real film stills now live in `public/images/` (`villa-01.jpg`…`villa-10.jpg`, extracted from the hero film) and win over picsum wherever wired: villa `Property` rows carry `image`/`gallery` (local paths), `PageHero` accepts an `image` prop, and `Offerings`/`FinalCta` use local stills. Keep using `next/image`.
 - Property `narrative` is `string[]`; wrap single paragraphs in `[...]`.
 - **Placeholders to replace for launch:** phone/WhatsApp/email on the `siteSettings` singleton in Sanity Studio and the office map block on `/contact`. The cinematic hero video ships at `public/hero.mp4` (re-encoded from the upscaled 1440p master with a keyframe every 6 frames for smooth scroll scrubbing, 1920x1080, ~4 Mbps, no audio, faststart) with poster `public/hero-poster.jpg`.
+
+## The desk (`/desk`)
+
+WhatsApp AI concierge plus owner CRM. Setup, Meta configuration and the
+pre-launch checklist are in `docs/desk-setup.md`.
+
+**Flow.** Meta webhook → `app/api/whatsapp/webhook/route.ts` verifies the
+signature over the raw body, persists through `lib/desk/ingest.ts`, returns 200,
+then `after()` runs `lib/agent/turn.ts`. The turn debounces 4s, bails if a newer
+message arrived, checks the kill switch and `ai_enabled`, generates, and sends.
+
+- `lib/whatsapp/` — `verify.ts` (HMAC, `timingSafeEqual`), `send.ts` (simulated
+  when `WHATSAPP_ACCESS_TOKEN` is unset), `payload.ts` (Meta envelope parsing)
+- `lib/agent/` — `turn.ts` (pipeline), `agent.ts` (tool loop + guardrail retries),
+  `context.ts` (prompt assembly), `prompt.ts` (system prompt), `tools.ts` (7
+  tools), `retrieve.ts` (knowledge + property search), `guardrail.ts`,
+  `groq.ts` (one `fetch`, no SDK)
+- `lib/desk/` — `supabase.ts`, `ingest.ts`, `lead.ts`, `score.ts`, `escalate.ts`,
+  `sync.ts` (Sanity → mirror), `stats.ts`, `leads.ts`, `csv.ts`, `parse.ts`
+- `app/(desk)/desk/` — desk home, conversations, leads, properties, knowledge,
+  audit, settings, simulator
+- `supabase/migrations/` — run in order; each is safe to re-run
+
+**Rules that are not preferences:**
+
+- **The model never sets the score.** `lib/desk/score.ts` is deterministic and
+  tested; the LLM only extracts facts. Same for stage past `qualifying`.
+- **`properties.internal_note` is excluded in the SQL SELECT**, not by prompt
+  instruction. Prompt text is not a security boundary.
+- **The Sanity sync never writes `bot_visible` or `internal_note`.** They are
+  owner-editable and exist only in the mirror.
+- **Every outbound draft passes `checkDraft`.** On a block it regenerates with
+  the broken rule named, twice, then sends `SAFE_FALLBACK` and escalates. The
+  tests in `guardrail.test.ts` are the specification.
+- **The service-role key is used on the webhook path only.** Everything with a
+  signed-in user goes through `deskClient()` so RLS decides.
+- Owner `tone_instructions` are appended *after* the prohibitions, never before.
+- `WHATSAPP_APP_SECRET` is required even before Meta exists: the webhook rejects
+  anything it cannot verify, and `/desk/simulator` signs with it.
+
+**Working on it:** `/desk/simulator` posts a signed, Meta-shaped payload at the
+real webhook, so the whole pipeline is testable with no Meta account. Leave a
+message id blank for a new message, or paste a previous one back to prove
+deduplication.
+
+**Deliberately not built yet:** voice-note transcription, embeddings (the
+`pg_trgm` indexes are already there for when entries pass ~150), a leads kanban,
+per-`wa_id` rate limiting, email escalation alongside WhatsApp.
 
 ## Motion conventions
 
@@ -102,3 +151,7 @@ Required in `.env.local` (see `.env.example` for the full list):
 - `NEXT_PUBLIC_SANITY_API_VERSION` — GROQ API version date
 - `SANITY_API_TOKEN` — Editor-permission token, server-only, used by `writeClient` (`sanity/client.ts`)
 - `SANITY_REVALIDATE_SECRET` — shared secret checked by the `/api/revalidate` webhook
+
+The desk adds Supabase, Groq, WhatsApp Cloud API and `CRON_SECRET`. See
+`.env.example` for the full list and `docs/desk-setup.md` for where each one
+comes from.

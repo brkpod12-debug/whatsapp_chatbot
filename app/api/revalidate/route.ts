@@ -1,5 +1,5 @@
 import { revalidateTag } from "next/cache";
-import { type NextRequest, NextResponse } from "next/server";
+import { after, type NextRequest, NextResponse } from "next/server";
 import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
 
 export function getTagsForType(type: string): string[] {
@@ -29,6 +29,20 @@ export async function POST(req: NextRequest) {
   tags.forEach((tag) => {
     revalidateTag(tag, { expire: 0 });
   });
+
+  // The bot answers from the Supabase mirror, not from Sanity, so a publish has
+  // to refresh both or the desk will quote a price the site has already changed.
+  // Runs after the response: Sanity only needs the acknowledgement.
+  if (payload._type === "property" || payload._type === "farmlandOption") {
+    after(async () => {
+      // Imported here rather than at module scope: the Sanity client validates
+      // its env at import time, and a revalidation for a non-property document
+      // has no business loading it.
+      const { syncProperties } = await import("@/lib/desk/sync");
+      const result = await syncProperties();
+      if (result.errors.length > 0) console.error("[revalidate:sync]", result.errors);
+    });
+  }
 
   return NextResponse.json({ revalidated: true, tags, now: Date.now() });
 }
