@@ -8,6 +8,13 @@ import { processTurn } from "@/lib/agent/turn";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// The 200 goes back in milliseconds; this budget is for the `after()` work.
+// A turn costs a 4s debounce plus up to three tool rounds and two guardrail
+// retries, so roughly 25s at the worst. Vercel's Fluid default is 300s, which
+// is a lot of billed compute for one hung Groq call: this caps the blast radius
+// rather than raising a ceiling.
+export const maxDuration = 60;
+
 /**
  * Meta's subscription handshake. Called once when the webhook URL is saved in
  * the Meta dashboard, and again whenever the callback URL is edited.

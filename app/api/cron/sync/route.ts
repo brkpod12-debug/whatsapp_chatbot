@@ -4,6 +4,9 @@ import { syncProperties } from "@/lib/desk/sync";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Two Sanity fetches and an upsert of the whole register. Seconds, not minutes.
+export const maxDuration = 60;
+
 /**
  * Nightly reconcile. The Sanity webhook is the fast path; this is the one that
  * guarantees a missed webhook never leaves a sold plot marketable overnight.
