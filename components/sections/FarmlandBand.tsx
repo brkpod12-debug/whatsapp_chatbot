@@ -15,7 +15,7 @@ export function FarmlandBand({ copy }: { copy: HomePage["farmlandBand"] }) {
               <ChapterMarker kicker="The farmland" tone="dark" />
             </Reveal>
             <RevealMask delay={0.1}>
-              <h2 className="mt-8 max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-paper lg:text-7xl">
+              <h2 className="mt-8 max-w-[26ch] text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-paper lg:text-6xl">
                 {copy.heading}
               </h2>
             </RevealMask>

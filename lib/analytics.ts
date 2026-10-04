@@ -12,7 +12,8 @@ declare global {
   }
 }
 
-export const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+// The measurement ID is public (it ships in every page). Env var overrides it.
+export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-1072B0BJEX";
 
 export function track(event: string, params: GtagParams = {}) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") return;

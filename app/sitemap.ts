@@ -9,6 +9,8 @@ const PAGES: { path: string; priority: number }[] = [
   { path: "/apartments", priority: 0.8 },
   { path: "/farmlands", priority: 0.8 },
   { path: "/contact", priority: 0.7 },
+  { path: "/about", priority: 0.6 },
+  { path: "/nri-property-services", priority: 0.6 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

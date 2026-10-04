@@ -190,16 +190,19 @@ export function CinematicHero({ copy, heroVideo }: { copy: HomePage["hero"]; her
           <div className="max-w-[760px]">
             <motion.div style={{ opacity: advisoryExit }}>
               <div className="hero-rule h-px w-[42px] origin-left bg-emerald" />
-              <p className="hero-kicker mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
-                {copy.kicker}
-              </p>
             </motion.div>
             <motion.div
               style={{ opacity: hyderabadOpacity, y: hyderabadExitY }}
-              className="mt-2 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
+              className="mt-5 w-fit overflow-hidden pb-[0.1em] pr-[0.06em] pt-[0.05em]"
             >
-              <h1 className="hero-title font-display text-[clamp(2.8rem,9vw,7.5rem)] leading-[1] text-paper">
-                {copy.place}
+              {/* The kicker is part of the H1 so the heading states the query. */}
+              <h1>
+                <span className="hero-kicker block max-w-[48ch] font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
+                  {copy.kicker}
+                </span>
+                <span className="hero-title mt-2 block font-display text-[clamp(2.8rem,9vw,7.5rem)] leading-[1] text-paper">
+                  {copy.place}
+                </span>
               </h1>
             </motion.div>
           </div>
@@ -375,11 +378,13 @@ function StaticHero({ copy }: { copy: HomePage["hero"] }) {
 
       <div className="relative mx-auto w-full max-w-[1440px] px-6 sm:px-12 lg:px-20">
         <div className="h-px w-[42px] bg-emerald" />
-        <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
-          {copy.kicker}
-        </p>
-        <h1 className="mt-3 font-display text-[clamp(3rem,10vw,7.5rem)] leading-[0.95] text-paper">
-          {copy.place}
+        <h1 className="mt-5">
+          <span className="block max-w-[48ch] font-mono text-[10px] uppercase tracking-[0.22em] text-paper/80 sm:text-[11px]">
+            {copy.kicker}
+          </span>
+          <span className="mt-3 block font-display text-[clamp(3rem,10vw,7.5rem)] leading-[0.95] text-paper">
+            {copy.place}
+          </span>
         </h1>
         <p className="mt-6 max-w-[44ch] font-display text-2xl italic leading-snug text-paper/85">
           {copy.titleLine1} {copy.titleLine2}

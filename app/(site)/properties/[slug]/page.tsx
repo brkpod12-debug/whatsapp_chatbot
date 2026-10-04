@@ -12,7 +12,9 @@ import {
 import { urlFor } from "@/sanity/image";
 import { buildMetadata, clampDescription, locality } from "@/lib/metadata";
 import { JsonLd, breadcrumbGraph, propertyGraph } from "@/lib/schema";
-import { getYouTubeEmbedUrl } from "@/lib/youtube";
+import { getYouTubeId } from "@/lib/youtube";
+import { VideoFacade } from "@/components/VideoFacade";
+import { videoById, videoObject } from "@/lib/videos";
 import type { Property } from "@/sanity/queries";
 import { PageHero } from "@/components/sections/PageHero";
 import { Gallery } from "@/components/Gallery";
@@ -142,7 +144,9 @@ export default async function PropertyPage({ params }: PageProps) {
     ),
   };
 
-  const embedSrc = getYouTubeEmbedUrl(property.youtubeUrl);
+  const videoId = getYouTubeId(property.youtubeUrl);
+  // VideoObject needs an upload date; only videos we track in lib/videos.ts have one.
+  const knownVideo = videoId ? videoById(videoId) : undefined;
 
   const heroUrl = property.image ? urlFor(property.image).width(1800).height(900).url() : undefined;
   const galleryImages =
@@ -250,7 +254,7 @@ export default async function PropertyPage({ params }: PageProps) {
         </div>
       </section>
 
-      {embedSrc && (
+      {videoId && (
         <section className="bg-stone">
           <div className="mx-auto max-w-[1440px] px-6 py-16 sm:px-12 lg:px-20 lg:py-24">
             <Reveal>
@@ -262,15 +266,12 @@ export default async function PropertyPage({ params }: PageProps) {
               </h2>
             </RevealMask>
             <Reveal delay={0.2} className="mt-10">
-              <div className="vignette relative aspect-video overflow-hidden bg-carbon">
-                <iframe
-                  src={embedSrc}
-                  title={`${property.title} walkthrough`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="absolute inset-0 h-full w-full"
-                />
-              </div>
+              {knownVideo && <JsonLd data={{ "@context": "https://schema.org", ...videoObject(knownVideo) }} />}
+              <VideoFacade
+                videoId={videoId}
+                title={`${property.title} walkthrough`}
+                alt={`${property.title} video walkthrough, ${property.location}`}
+              />
             </Reveal>
           </div>
         </section>

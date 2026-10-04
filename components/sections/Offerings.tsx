@@ -36,7 +36,7 @@ export function Offerings({ services, copy }: { services: Service[]; copy: HomeP
     <section className="bg-paper">
       <div className="mx-auto max-w-[1440px] px-6 py-28 sm:px-12 lg:px-20 lg:py-40">
         <RevealMask>
-          <h2 className="max-w-[18ch] text-balance font-display text-5xl leading-[1.02] tracking-[-0.02em] text-ink lg:text-7xl">
+          <h2 className="max-w-[26ch] text-balance font-display text-4xl leading-[1.05] tracking-[-0.02em] text-ink lg:text-6xl">
             {copy.heading}
           </h2>
         </RevealMask>

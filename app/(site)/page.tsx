@@ -2,6 +2,7 @@ import { CinematicHero } from "@/components/CinematicHero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
 import { Stats } from "@/components/sections/Stats";
 import { Featured } from "@/components/sections/Featured";
+import { LatestVideosSection } from "@/components/sections/LatestVideosSection";
 import { Offerings } from "@/components/sections/Offerings";
 import { Story } from "@/components/sections/Story";
 import { FarmlandBand } from "@/components/sections/FarmlandBand";
@@ -43,6 +44,7 @@ export default async function Home() {
       {on("trustStrip") && <TrustStrip logos={logos} />}
       {on("stats") && <Stats stats={stats} copy={homePage.stats} />}
       {on("featured") && <Featured properties={featuredProperties} copy={homePage.featured} />}
+      <LatestVideosSection />
       {on("offerings") && <Offerings services={services} copy={homePage.offerings} />}
       {on("story") && <Story copy={homePage.story} />}
       {on("farmlandBand") && <FarmlandBand copy={homePage.farmlandBand} />}
